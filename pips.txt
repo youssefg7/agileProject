@@ -2,3 +2,4 @@ django
 PyMySQL
 django-bootstrap-v5
 mysqlclient
+django-viewflow --pre
