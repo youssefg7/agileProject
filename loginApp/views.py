@@ -7,15 +7,15 @@ from donateApp.views import index
 from dbApp import models
 import datetime
 
-def loginPage(request):
-    return render(request, "loginApp/login.html")
+def donorLoginPage(request):
+    return render(request, "donorLoginApp/donorLogin.html")
 
-def loginSubmit(request):
+def donorLoginSubmit(request):
     femail = request.POST['Email']
     fpassword = request.POST['Password']
     fquery = models.User.objects.filter(email=femail)
     if fquery.all().count() == 0:
-        return HttpResponseRedirect(reverse('loginPage'))
+        return HttpResponseRedirect(reverse('donorLoginPage'))
     else:
         if fquery.all().values()[0]["password"] == fpassword:
                 response = HttpResponseRedirect(reverse('index'))
@@ -24,9 +24,10 @@ def loginSubmit(request):
                 response.set_cookie("userid", fquery.all().values()[0]["user_id"], max_age=max_age,expires=expires,)
                 return response
         else:
-            return HttpResponseRedirect(reverse('loginPage'))
+            return HttpResponseRedirect(reverse('donorLoginPage'))
         
+def myaccountPage(request):
+    return render(request, "donorLoginApp/donorMyaccount.html")
 
-
-
-# Create your views here.
+def donorSignupPage(request):
+    return render(request, "donorLoginApp/donorSignup.html")

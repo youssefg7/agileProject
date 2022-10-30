@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from dbApp import models
 
 # Create your views here.
@@ -10,3 +9,6 @@ def index(request):
     except:
         x = "Please Login"
     return render(request, "donateApp/index.html", {'test' : x}) 
+
+def aboutPage(request):
+    return render(request, "donateApp/about.html") 
