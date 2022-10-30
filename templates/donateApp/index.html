@@ -1,7 +1,5 @@
-{% load bootstrap5 %} 
-{% bootstrap_css %} 
-{% bootstrap_javascript %} 
-{%bootstrap_messages %}
-
-<p1>Index page in donate App<p1>
-<h1>{{test}}</h1>
+{% extends 'base.html' %}
+{% block content %}
+<h1>Welcome !</h1>
+<h3>{{test}}</h3>
+{% endblock content %}
