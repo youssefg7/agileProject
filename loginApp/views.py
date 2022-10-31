@@ -32,6 +32,11 @@ def myaccountPage(request):
 def donorSignupPage(request):
     return render(request, "donorLoginApp/donorSignup.html")
 
+def donorSignupSubmit(request):
+    user = models.User(name = request.POST['Name'], email = request.POST['Email'], password = request.POST['Password'])
+    user.save()
+    return HttpResponseRedirect('/')
+
 def donorLogout(request):
     response = HttpResponseRedirect('/')
     max_age = 365 * 24 * 60 * 60

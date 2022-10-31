@@ -6,5 +6,6 @@ urlpatterns = [
     path('donorLoginSubmit/', views.donorLoginSubmit, name='donorLoginSubmit'),
     path('donorMyaccount/', views.myaccountPage, name='donorMyaccount'),
     path('donorSignup/', views.donorSignupPage, name='donorSignup'),
+    path('donorSignup/donorSignupSubmit/', views.donorSignupSubmit, name='donorSignupSubmit'),
     path('donorLogout/', views.donorLogout, name='donorLogout'),
 ]
