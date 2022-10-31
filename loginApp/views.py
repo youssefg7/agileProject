@@ -18,7 +18,7 @@ def donorLoginSubmit(request):
         return HttpResponseRedirect(reverse('donorLoginPage'))
     else:
         if fquery.all().values()[0]["password"] == fpassword:
-                response = HttpResponseRedirect(reverse('index'))
+                response = HttpResponseRedirect(reverse('donorMyaccount'))
                 max_age = 365 * 24 * 60 * 60
                 expires = datetime.datetime.strftime(datetime.datetime.utcnow() + datetime.timedelta(seconds=max_age),"%a, %d-%b-%Y %H:%M:%S GMT",)
                 response.set_cookie("userid", fquery.all().values()[0]["user_id"], max_age=max_age,expires=expires,)
