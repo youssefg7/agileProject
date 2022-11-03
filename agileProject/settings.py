@@ -87,7 +87,7 @@ DATABASES = {
         "NAME": "churchdb",
         "USER": "admin",
         "PASSWORD": "YGF0000ygfssms",
-        "HOST": "agileproject.csyseqszqjec.us-east-1.rds.amazonaws.com",
+        "HOST": "agile-pro.csyseqszqjec.us-east-1.rds.amazonaws.com",
         "PORT": 3306
     }
 }
