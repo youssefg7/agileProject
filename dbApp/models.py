@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator
 from django.core.validators import MinValueValidator
-from viewflow.fields import CompositeKey
+# from viewflow.fields import CompositeKey
 
 
 
@@ -43,7 +43,7 @@ class Reciept(models.Model):
     church_id = models.ForeignKey(Church, on_delete = models.CASCADE)
 
 class R_Details(models.Model):
-    id = CompositeKey( columns = ['reciept_id','item_id'] ) # I don't know why it's considered an error but it works so ¯\_(ツ)_/¯
+    id = models.Field( ('reciept_id','item_id'), primary_key=True, default=(-1, -1)) # I don't know why it's considered an error but it works so ¯\_(ツ)_/¯
     reciept_id = models.ForeignKey(Reciept, on_delete = models.CASCADE)
     item_id = models.ForeignKey(Item, on_delete = models.PROTECT)
     item_quantity = models.IntegerField(validators = [MinValueValidator(0)], default = 0)
