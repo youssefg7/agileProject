@@ -1,47 +1,6 @@
-{% load bootstrap5 %} 
-{% bootstrap_css %} 
+{% load bootstrap5 %} {% bootstrap_css %}
 {% bootstrap_javascript %} 
-{% bootstrap_messages %}
+{% bootstrap_messages %} 
 
-<nav class="navbar sticky-top navbar-expand-xl navbar-dark bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Kenesty</a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarDark"
-      aria-controls="navbarDark"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse show" id="navbarDark">
-      <ul class="navbar-nav me-auto mb-2 mb-xl-0">
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/about">About</a>
-        </li>
-      </ul>
-      <a href="/login/donorSignup/">
-        <button class="btn btn-outline-light">Sign Up</button>
-      </a>
-      <a href="/login/donorMyaccount/">
-        <button class="btn btn-outline-light">My account</button>
-      </a>
-      <a href="/login">
-        <button class="btn btn-outline-light" type="submit">Login</button>
-      </a>
-      <a href="/login/donorLogout">
-        <button class="btn btn-outline-light">Logout</button>
-      </a>
-    </div>
-  </div>
-</nav>
-
-<div style="margin-left: 0.9%; margin-right: 0.9%">
-  {% block content %} {% endblock content %}
-</div>
+{% block content %} 
+{% endblock content %}

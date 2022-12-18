@@ -4,12 +4,17 @@ from django.core.validators import MinValueValidator
 # from viewflow.fields import CompositeKey
 
 
+class Roles(models.Model):
+    role_number = models.AutoField(primary_key=True)
+    role_name = models.CharField(max_length=254)
 
 class User(models.Model):
     user_id = models.AutoField(primary_key = True)
     name = models.CharField(max_length = 254)
     email = models.EmailField(max_length = 254, unique = True)
     password = models.CharField(max_length = 32)
+    role = models.IntegerField(max_length=254)
+    fav_church = models.CharField(max_length = 254, default="")
 
 class Donor(models.Model):
     user_id = models.ForeignKey(User,primary_key = True, on_delete = models.CASCADE)
@@ -32,7 +37,7 @@ class Item(models.Model):
     church_id = models.ForeignKey(Church, on_delete = models.CASCADE)
 
 class Servant(models.Model):
-    user_id = models.ForeignKey(User, primary_key = True, on_delete = models.CASCADE)
+    user_id = models.OneToOneField(User, primary_key = True, on_delete = models.CASCADE)
     church_id = models.ForeignKey(Church, on_delete = models.CASCADE)
 
 class Reciept(models.Model):

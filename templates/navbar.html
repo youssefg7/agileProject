@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if prole == 1 %}
+
+
+{% include 'navbaradmin.html' %}
+
+{% elif prole == 2 %}
+
+{% include 'navbardonor.html' %}
+
+{% else %}
+
+
+{% include 'navbarlogin.html' %}
+{% comment %} <div style="margin-left: 0.9%; margin-right: 0.9%">
+    
+</div> {% endcomment %}
+
+{% endif %}
+
+{% endblock content %}

@@ -1,5 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
+{% include 'navbar.html' with prole=rolenum %}
+
+<div style="margin-left: 0.9%; margin-right: 0.9%"> 
 <h1>Welcome !</h1>
-<h3>{{test}}</h3>
+
+{% if state == 2 %}
+
+<h3>"Please Login"</h3>
+
+{% else %}
+
+<h3>{{name}}, you are a/an {{role}} </h3>
+
+{% endif %}
+</div>
+
 {% endblock content %}
