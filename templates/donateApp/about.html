@@ -1,5 +1,25 @@
 {% extends 'base.html' %}
+
+{% block navbar %} 
+
+{% if rolenum == 1 %}
+
+{% include 'navbaradmin.html' %}
+
+{% elif rolenum == 2 %}
+
+{% include 'navbardonor.html' %}
+
+{% else %}
+
+{% include 'navbarlogin.html' %}
+
+{% endif %}
+
+{% endblock navbar %}
+
 {% block content %}
-{% include 'navbar.html' with prole=rolenum %}
-About page
+
+<h3>About Page</h3
+
 {% endblock content %}

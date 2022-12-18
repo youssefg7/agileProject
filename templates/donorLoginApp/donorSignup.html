@@ -1,5 +1,12 @@
-{% extends 'base.html' %} {% block content %}
-{% include 'navbar.html' with prole=-1%}
+{% extends 'base.html' %} 
+
+{% block navbar %} 
+
+{% include 'navbarlogin.html' %}
+
+{% endblock navbar %}
+
+{% block content %}
 <div style="display: flex; width: 100%; height: 90%">
     <div style="
     margin-left: auto;
