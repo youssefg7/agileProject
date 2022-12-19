@@ -27,15 +27,18 @@
                     <input type="Text" name="Name" class="form-control" id="colFormLabel" placeholder="Your Name" />
                 </div>
                 <label for="colFormLabel" class="col-form-label">Favourite Churches:</label>
-                <div class="col-sm-10">
-                    <select name="dropdown" id="fav_church">
-                        <option value="" selected="selected">Please select a church</option>
-                        {% for x in Churches %}
-                        <option value="">{{x}}</option>
-                        {% endfor%}
-                    </select>
-
+                
+                
+                <!-- To have radio, change input type to radio and add same name attribute to all inputs -->
+                <div class="list-group">
+                    {% for x in Churches %}
+                        <label class="list-group-item">
+                        <input class="form-check-input me-1" name='item_checkbox'type="checkbox" value="{{x.church_id}}" id="{{x.church_id}}">
+                        {{x.name}}
+                        </label>
+                    {% endfor%}
                 </div>
+
                 <label for="colFormLabel" class="col-form-label">Password:</label>
                 <div class="col-sm-10">
                     <input name="Password" type="Password" class="form-control" id="colFormLabel" />

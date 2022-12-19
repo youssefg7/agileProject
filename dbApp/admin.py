@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Card, Church, Donor, Item, R_Details, Reciept, Reserves, Roles, Servant, Admin
+from .models import User, Card, ItemDetails, Church, Donor, Item, R_Details, Reciept, Reserves, Roles, Servant, Admin
 
 # Register your models here.
 admin.site.register(User)
@@ -13,3 +13,4 @@ admin.site.register(Reserves)
 admin.site.register(Roles)
 admin.site.register(Servant)
 admin.site.register(Admin)
+admin.site.register(ItemDetails)
