@@ -2,19 +2,7 @@
 
 {% block navbar %} 
 
-{% if rolenum == 1 %}
-
-{% include 'navbaradmin.html' %}
-
-{% elif rolenum == 2 %}
-
-{% include 'navbardonor.html' %}
-
-{% else %}
-
-{% include 'navbarlogin.html' %}
-
-{% endif %}
+{% include 'navbar.html' with prole=rolenum %}
 
 {% endblock navbar %}
 

@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
+
+{% block navbar %} 
+
+{% include 'navbar.html' with prole=rolenum %}
+
+{% endblock navbar %}
+
 {% block content %}
 
-{% include 'navbar.html' with prole=-1%}
 Donor My account
 
 {% endblock content %}
