@@ -1,6 +1,10 @@
 from django.db import models
 from django.core.validators import MaxValueValidator
 from django.core.validators import MinValueValidator
+from django.conf import global_settings
+from django.utils import translation
+
+
 # from viewflow.fields import CompositeKey
 
 
@@ -20,14 +24,18 @@ class Church(models.Model):
     name = models.CharField(max_length = 254)
     address = models.CharField(max_length = 254)
 
-class UserFavChurch(models.Model):
-    id = models.Field( ('user_id','church_id'), primary_key=True, default=(-1, -1)) # I don't know why it's considered an error but it works so ¯\_(ツ)_/¯
-    user_id = models.ForeignKey(User, on_delete = models.CASCADE)
-    church_id = models.ForeignKey(Church, on_delete = models.PROTECT)
-
-
 class Donor(models.Model):
     user_id = models.ForeignKey(User,primary_key = True, on_delete = models.CASCADE)
+    fav_church = models.ManyToManyField(Church)
+
+class UserFavChurch(models.Model):
+    id = models.Field( ('user_id','church_id'), primary_key=True, default=(-1, -1)) # I don't know why it's considered an error but it works so ¯\_(ツ)_/¯
+    user_id = models.ForeignKey(Donor, on_delete = models.CASCADE)
+    church_id = models.ForeignKey(Church, on_delete = models.PROTECT)
+
+class Admin(models.Model):
+    user_id = models.ForeignKey(User,primary_key = True, on_delete = models.CASCADE)
+    church = models.CharField(max_length=254)
     
 class Card(models.Model):
     user_id = models.ForeignKey(Donor, on_delete = models.CASCADE)
