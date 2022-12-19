@@ -28,11 +28,6 @@ class Donor(models.Model):
     user_id = models.ForeignKey(User,primary_key = True, on_delete = models.CASCADE)
     fav_church = models.ManyToManyField(Church)
 
-class UserFavChurch(models.Model):
-    id = models.Field( ('user_id','church_id'), primary_key=True, default=(-1, -1)) # I don't know why it's considered an error but it works so ¯\_(ツ)_/¯
-    user_id = models.ForeignKey(Donor, on_delete = models.CASCADE)
-    church_id = models.ForeignKey(Church, on_delete = models.PROTECT)
-
 class Admin(models.Model):
     user_id = models.ForeignKey(User,primary_key = True, on_delete = models.CASCADE)
     church = models.CharField(max_length=254)
@@ -42,7 +37,6 @@ class Card(models.Model):
     cvv = models.IntegerField(validators = [MaxValueValidator(999), MinValueValidator(0)])
     card_num = models.IntegerField(validators = [MaxValueValidator(9999999999999999), MinValueValidator(0)], primary_key = True)
     expiry_date = models.DateField()
-
 
 class Item(models.Model):
     item_id = models.AutoField(primary_key = True)
