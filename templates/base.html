@@ -2,10 +2,18 @@
 {% bootstrap_javascript %} 
 {% bootstrap_messages %} 
 
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  </head>
+
+<body>
 {% block navbar %} 
 {% endblock navbar %}
-
 <div style="margin-left: 0.9%; margin-right: 0.9%" class="position-relative"> 
 {% block content %} 
 {% endblock content %}
 </div>
+</body>
