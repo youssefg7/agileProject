@@ -8,15 +8,17 @@
 
 {% block content %}
 
-<h1>Welcome !</h1>
+{% if rolenum == 1 %}
 
-{% if state == 2 %}
+<h3>{{name}}, you are a/an Donator </h3>
 
-<h3>"Please Login"</h3>
+{% elif rolenum == 2 %}
 
-{% else %}
+<h3>{{name}}, you are a/an Admin </h3>
 
-<h3>{{name}}, you are a/an {{role}} </h3>
+{%else%}
+
+<h3>{{name}}, you are a/an bitch </h3>
 
 {% endif %}
 
