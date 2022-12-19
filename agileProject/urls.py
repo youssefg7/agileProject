@@ -19,6 +19,6 @@ import dbApp
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("",include("donateApp.urls")),
+    path("",include("userApp.urls")),
     path("login/",include("loginApp.urls")),
 ]

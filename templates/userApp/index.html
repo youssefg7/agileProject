@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block navbar %} 
+
+{% include 'navbar.html' with prole=rolenum %}
+
+{% endblock navbar %}
+
+{% block content %}
+
+{% if rolenum == 1 %} {% comment %} Admin {% endcomment %}
+
+<br>
+<h2 class="text-center">Hello {{name}}!</h2>
+<br>
+
+<p>People in need most due: </p>
+
+<table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">First</th>
+        <th scope="col">Last</th>
+        <th scope="col">Handle</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for x in array %}
+      <tr>
+        <th scope="row">3</th>
+        <td colspan="2">Larry the Bird</td>
+        <td>@twitter</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+
+<input type="submit" class="btn btn-primary position-absolute end-0" value="View More Details" />
+
+{% elif rolenum == 2 %} {% comment %} Donor {% endcomment %}
+
+<h3>{{name}}, you are a/an Donator </h3>
+
+{%else%} {% comment %} Anon {% endcomment %}
+
+<h3>{{name}}, you are a/an bitch </h3>
+
+{% endif %}
+
+{% endblock content %}
