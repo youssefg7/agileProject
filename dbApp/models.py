@@ -24,6 +24,7 @@ class UserFavChurch(models.Model):
     id = models.Field( ('user_id','church_id'), primary_key=True, default=(-1, -1)) # I don't know why it's considered an error but it works so ¯\_(ツ)_/¯
     user_id = models.ForeignKey(User, on_delete = models.CASCADE)
     church_id = models.ForeignKey(Church, on_delete = models.PROTECT)
+    
 
 class Donor(models.Model):
     user_id = models.ForeignKey(User,primary_key = True, on_delete = models.CASCADE)
