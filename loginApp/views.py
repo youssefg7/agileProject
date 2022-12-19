@@ -37,7 +37,7 @@ def donorSignupPage(request):
     return render(request, "donorLoginApp/donorSignup.html", {'Churches': ch})
 
 def donorSignupSubmit(request):
-    user = models.User(name = request.POST['Name'], email = request.POST['Email'], password = request.POST['Password'], role = 2, fav_church = request.POST['dropdown'])
+    user = models.User(name = request.POST['Name'], email = request.POST['Email'], password = request.POST['Password'], role = 2)
     user.save()
     return HttpResponseRedirect('/')
 
