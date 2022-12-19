@@ -38,6 +38,30 @@
 
 <input type="submit" class="btn btn-primary position-absolute end-0" value="View More Details" />
 
+<p>Inventory highest stocked: </p>
+
+<table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">First</th>
+        <th scope="col">Last</th>
+        <th scope="col">Handle</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for x in array %}
+      <tr>
+        <th scope="row">3</th>
+        <td colspan="2">Larry the Bird</td>
+        <td>@twitter</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+
+<input type="submit" class="btn btn-primary position-absolute end-0" value="View More Details" />
+
 {% elif rolenum == 2 %} {% comment %} Donor {% endcomment %}
 
 <h3>{{name}}, you are a/an Donator </h3>
