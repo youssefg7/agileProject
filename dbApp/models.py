@@ -49,8 +49,8 @@ class Admin(models.Model):
     
 class Card(models.Model):
     user_id = models.ForeignKey(Donor, on_delete = models.CASCADE)
-    cvv = models.IntegerField(validators = [MaxValueValidator(999), MinValueValidator(0)])
-    card_num = models.IntegerField(validators = [MaxValueValidator(9999999999999999), MinValueValidator(0)], primary_key = True)
+    cvv = models.IntegerField(max_length=254)
+    card_num = models.CharField(primary_key = True, max_length=254)
     expiry_date = models.DateField()
 
 

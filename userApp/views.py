@@ -32,11 +32,11 @@ def creditCardDonation(request):
     if church == 0:
         return HttpResponseRedirect(reverse('index'))
     save = request.POST['saveCard']
-    cardNumber = int(request.POST['Cardnum'])
+    cardNumber = request.POST['Cardnum']
     holderName = request.POST['Cardholdname']
     CVV = int(request.POST['CVV'])
     expiryDate = request.POST['Expiry']   
-    if cardNumber > 9999999999999999 or cardNumber < 1111111111111111:
+    if cardNumber > '9999999999999999' or cardNumber < '1000000000000000':
         return HttpResponseRedirect(reverse('index'))
     if CVV > 999 or CVV < 111:
         return HttpResponseRedirect(reverse('index'))
