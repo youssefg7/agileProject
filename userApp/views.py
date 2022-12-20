@@ -6,6 +6,16 @@ from dbApp import models
 
 # Create your views here.
 
+def adminInvPage(request):
+    array = [1]*100
+    dict = {'role' : "Admin", 'name': "Anthony", 'rolenum': 1, 'array':array}
+    return render(request, "userApp/admininv.html",dict)
+
+def adminPeopleINPage(request):
+    array = [1]*100
+    dict = {'role' : "Admin", 'name': "Anthony", 'rolenum': 1, 'array':array}
+    return render(request, "userApp/admininv.html",dict)
+
 def index(request):
     try:
         id = request.COOKIES['userid']
