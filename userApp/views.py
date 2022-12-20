@@ -14,11 +14,12 @@ def index(request):
         name = models.User.objects.get(user_id = id).name
         array = [1,2]
         churches = models.Church.objects.all()
-        all_cards = models.Card.objects.all()
         cards = []
-        for x in all_cards:
-            if x.user_id == models.Donor.objects.get(user_id = id):
-                cards.append(x)
+        if rolenum == 2:
+            all_cards = models.Card.objects.all()
+            for x in all_cards:
+                if x.user_id == models.Donor.objects.get(user_id = id):
+                    cards.append(x)
         dict = {'role' : role, 'name': name, 'rolenum': rolenum, 'array':array, 'churches': churches, 'cards': cards}
     except:
         dict = {'role' : "Anon", 'name': "", 'rolenum': -1}
