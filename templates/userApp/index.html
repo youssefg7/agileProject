@@ -168,25 +168,6 @@
     </div>
     <div class="tab-pane container fade" id="phys">
         <form action="inPersonDonation/" method="post">
-            <div class="col-sm-10">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#cash">Cash</a>
-                    </li>
-                    <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#items">Items</a>
-                    </li>
-                </ul>
-                
-                    <br>
-                
-                <!-- Tab panes -->
-                <div class="tab-content">
-                    <div class="tab-pane container active" id="cash">
-                        <label for="colFormLabel" class="col-form-label">Amount:</label>
-                    <div class="col-sm-10">
-                        <input type="Number"  min="0" name="Amount" class="form-control" id="colFormLabel" placeholder="0" />
-                    </div>
                     <label for="colFormLabel" class="col-form-label">Church:</label>
                     <div class="col-sm-10">
                         <select name="dropdown" class="form-control" id="fav_church">
@@ -209,11 +190,7 @@
                             <option value="">{{x}}</option>
                             {% endfor%}
                         </select>
-                    </div>
-                    <div class="tab-pane container fade" id="items">
-                        Items Page
-                    </div>
-                </div>
+                
                 <br>
                 <input type="submit" class="btn btn-primary" value="Confirm Reservation" />
             </div>
