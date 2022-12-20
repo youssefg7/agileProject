@@ -45,7 +45,7 @@ class Donor(models.Model):
 
 class Admin(models.Model):
     user_id = models.ForeignKey(User, primary_key=True, on_delete = models.CASCADE)
-    church = models.CharField(max_length=254)
+    church_id = models.ForeignKey(Church, on_delete = models.CASCADE, default=-1)
     
 class Card(models.Model):
     user_id = models.ForeignKey(Donor, on_delete = models.CASCADE)
@@ -62,9 +62,8 @@ class Reciept(models.Model):
     reciept_id = models.AutoField(primary_key = True)
     date = models.DateField()
     time = models.TimeField()
-    user_id = models.ForeignKey(User, on_delete = models.PROTECT)
+    user_id = models.ForeignKey(Donor, on_delete = models.PROTECT)
     church_id = models.ForeignKey(Church, on_delete = models.CASCADE)
-    items = models.ManyToManyField(ItemDetails)
 
 class R_Details(models.Model):
     reciept_id = models.ForeignKey(Reciept, on_delete = models.CASCADE)

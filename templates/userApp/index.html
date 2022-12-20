@@ -146,7 +146,7 @@
                     </div>
                     <div class="tab-pane container fade" id="savedcard">
                         <select name="dropdown" class="form-control" id="fav_church">
-                            <option value="" selected="selected">Please select a card</option>
+                            <option value="0" selected="selected">Please select a card</option>
                             {% for x in cards %}
                             <option value="{{x.card_id}}">{{x.card_num}}</option>
                             {% endfor%}
