@@ -36,9 +36,13 @@
     </tbody>
 </table>
 
-<input type="submit" class="btn btn-primary position-absolute end-0" value="View More Details" />
+<a href="{% url 'userApp:adminPeopleIN' %}">
+<button type="button" class="btn btn-primary position-absolute end-0" >View More Details</button>
+</a>
+
 <br>
 <br>
+
 <p>Inventory highest stocked: </p>
 
 <table class="table table-hover">
@@ -61,7 +65,9 @@
     </tbody>
 </table>
 
-<input type="submit" class="btn btn-primary position-absolute end-0" value="View More Details" />
+<a href="{% url 'userApp:adminInvPage' %}">
+    <button type="button" class="btn btn-primary position-absolute end-0" >View More Details</button>
+    </a>
 
 {% elif rolenum == 2 %} {% comment %} Donor {% endcomment %}
 

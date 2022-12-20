@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block navbar %} 
+
+{% include 'navbar.html' with prole=rolenum %}
+
+{% endblock navbar %}
+
+
+{% block content %}
+
+<br>
+
+
+{% if  rolenum == 1 %} {% comment %} Admin {% endcomment %}
+<table id="example" class="table table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Office</th>
+            <th>Age</th>
+            <th>Start date</th>
+            <th>Salary</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for x in array%}
+        <tr>
+            <td>Tiger Nixon</td>
+            <td>System Architect</td>
+            <td>Edinburgh</td>
+            <td>61</td>
+            <td>2011-04-25</td>
+            <td><input type="submit" class="btn btn-block btn-info" value="Give out" /></td>
+        </tr>
+        {%endfor%}
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Office</th>
+            <th>Age</th>
+            <th>Start date</th>
+            <th>Salary</th>
+        </tr>
+    </tfoot>
+</table>
+
+{% endif %}
+
+
+{% endblock content %}
