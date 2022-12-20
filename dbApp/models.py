@@ -17,19 +17,34 @@ class User(models.Model):
     name = models.CharField(max_length = 254)
     email = models.EmailField(max_length = 254, unique = True)
     password = models.CharField(max_length = 32)
-    role = models.IntegerField(max_length=254)
+    role = models.IntegerField()
+
+class Item(models.Model):
+    item_id = models.AutoField(primary_key = True)
+    name = models.CharField(max_length = 254)
 
 class Church(models.Model):
     church_id = models.AutoField(primary_key = True)
     name = models.CharField(max_length = 254)
     address = models.CharField(max_length = 254)
 
+class ItemDetails(models.Model):
+    church_id = models.ForeignKey(Church, on_delete = models.CASCADE, default=-1)
+    item_id = models.ForeignKey(Item, on_delete = models.CASCADE)
+    quantity = models.IntegerField(validators = [MinValueValidator(0)], default = 0)
+
+    class Meta:
+        
+        unique_together = ['church_id','item_id']
+        index_together = ['church_id','item_id']
+
+
 class Donor(models.Model):
-    user_id = models.ForeignKey(User,primary_key = True, on_delete = models.CASCADE)
+    user_id = models.ForeignKey(User, primary_key=True, on_delete = models.CASCADE)
     fav_church = models.ManyToManyField(Church)
 
 class Admin(models.Model):
-    user_id = models.ForeignKey(User,primary_key = True, on_delete = models.CASCADE)
+    user_id = models.ForeignKey(User, primary_key=True, on_delete = models.CASCADE)
     church = models.CharField(max_length=254)
     
 class Card(models.Model):
@@ -38,11 +53,6 @@ class Card(models.Model):
     card_num = models.IntegerField(validators = [MaxValueValidator(9999999999999999), MinValueValidator(0)], primary_key = True)
     expiry_date = models.DateField()
 
-class Item(models.Model):
-    item_id = models.AutoField(primary_key = True)
-    name = models.CharField(max_length = 254)
-    quantity = models.IntegerField(validators = [MinValueValidator(0)], default = 0)
-    church_id = models.ForeignKey(Church, on_delete = models.CASCADE)
 
 class Servant(models.Model):
     user_id = models.OneToOneField(User, primary_key = True, on_delete = models.CASCADE)
@@ -54,12 +64,18 @@ class Reciept(models.Model):
     time = models.TimeField()
     user_id = models.ForeignKey(User, on_delete = models.PROTECT)
     church_id = models.ForeignKey(Church, on_delete = models.CASCADE)
+    items = models.ManyToManyField(ItemDetails)
 
 class R_Details(models.Model):
-    id = models.Field( ('reciept_id','item_id'), primary_key=True, default=(-1, -1)) # I don't know why it's considered an error but it works so ¯\_(ツ)_/¯
     reciept_id = models.ForeignKey(Reciept, on_delete = models.CASCADE)
     item_id = models.ForeignKey(Item, on_delete = models.PROTECT)
     item_quantity = models.IntegerField(validators = [MinValueValidator(0)], default = 0)
+
+    class Meta:
+        
+        unique_together = ['reciept_id','item_id']
+        index_together = ['reciept_id','item_id']
+
 
 class Reserves(models.Model):
     reservation_num = models.AutoField(primary_key = True)

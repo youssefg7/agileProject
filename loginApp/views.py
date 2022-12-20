@@ -33,12 +33,21 @@ def donorSignupPage(request):
     churches = models.Church.objects.all()
     ch = []
     for x in churches:
-        ch.append(x.name)
+        ch.append(x)
     return render(request, "donorLoginApp/donorSignup.html", {'Churches': ch})
 
 def donorSignupSubmit(request):
-    user = models.User(name = request.POST['Name'], email = request.POST['Email'], password = request.POST['Password'], role = 2)
-    user.save()
+    user1 = models.User(name = request.POST['Name'], email = request.POST['Email'], password = request.POST['Password'], role = 2)
+    user1.save()
+    selected_churches = request.POST.getlist("item_checkbox")
+    churches = []
+    donor = models.Donor(user_id = models.User.objects.get(user_id = user1.user_id))
+    donor.save()
+    for i in selected_churches:
+        churches.append(models.Church.objects.get(church_id = int(i)))
+    donor.fav_church.set(churches)
+    print(churches)
+    donor.save()
     return HttpResponseRedirect('/')
 
 def donorLogout(request):
