@@ -25,13 +25,13 @@
         </tr>
     </thead>
     <tbody>
-        {% for x in array%}
+        {% for i, person, item, quantity, date in items  %}
         <tr>
-            <td>Tiger Nixon</td>
-            <td>System Architect</td>
-            <td>Edinburgh</td>
-            <td>61</td>
-            <td>2011-04-25</td>
+            <th scope="row">{{i}}</th>
+            <td>{{person.name}}</td>
+            <td>{{item.name}}</td>
+            <td>{{quantity}}</td>
+            <td>{{date}}</td>
             <td><input type="submit" class="btn btn-block btn-info" value="Give out" /></td>
         </tr>
         {%endfor%}

@@ -34,10 +34,25 @@ class ItemDetails(models.Model):
     quantity = models.IntegerField(validators = [MinValueValidator(0)], default = 0)
 
     class Meta:
-        
+        ordering = ['-quantity']
         unique_together = ['church_id','item_id']
-        index_together = ['church_id','item_id']
 
+
+class PeopleInNeed(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=254)
+
+class Need(models.Model):
+    people_in_need_id = models.ForeignKey(PeopleInNeed, on_delete = models.CASCADE, default=-1)
+    item_id = models.ForeignKey(Item, on_delete = models.CASCADE)
+    quntity = models.IntegerField()
+    due_date = models.DateField(null=True)
+    period = models.IntegerField()
+    chuch_id = models.ForeignKey(Church, on_delete = models.CASCADE, default=-1)
+
+    class Meta:
+        ordering = ['due_date']
+        unique_together = ['people_in_need_id','item_id']
 
 class Donor(models.Model):
     user_id = models.ForeignKey(User, primary_key=True, on_delete = models.CASCADE)
@@ -49,7 +64,7 @@ class Admin(models.Model):
     
 class Card(models.Model):
     user_id = models.ForeignKey(Donor, on_delete = models.CASCADE)
-    cvv = models.IntegerField(max_length=254)
+    cvv = models.IntegerField()
     card_num = models.CharField(primary_key = True, max_length=254)
     expiry_date = models.DateField()
 
@@ -71,15 +86,20 @@ class R_Details(models.Model):
     item_quantity = models.IntegerField(validators = [MinValueValidator(0)], default = 0)
 
     class Meta:
-        
         unique_together = ['reciept_id','item_id']
         index_together = ['reciept_id','item_id']
 
 
+class Timeslots(models.Model):
+    time_id = models.AutoField(primary_key=True)
+    time = models.TimeField()
+    church_id = models.ForeignKey(Church, on_delete = models.CASCADE)
+    # hn4of hn-handle el timeslot dy fy anhy ayam
+
 class Reserves(models.Model):
     reservation_num = models.AutoField(primary_key = True)
     date = models.DateField()
-    time = models.TimeField()
+    time = models.ForeignKey(Timeslots, on_delete = models.CASCADE)
     user_id = models.ForeignKey(Donor, on_delete = models.CASCADE)
     church_id = models.ForeignKey(Church, on_delete = models.CASCADE)
 

@@ -23,16 +23,19 @@
         <th scope="col">First</th>
         <th scope="col">Last</th>
         <th scope="col">Handle</th>
+        <th scope="col">Handle</th>
       </tr>
     </thead>
     <tbody>
-        {% for x in array %}
-      <tr>
-        <th scope="row">3</th>
-        <td colspan="2">Larry the Bird</td>
-        <td>@twitter</td>
-      </tr>
-      {% endfor %}
+        {% for i, person, item, quantity, date in people  %}
+        <tr>
+            <th scope="row">{{i}}</th>
+            <td>{{person.name}}</td>
+            <td>{{item.name}}</td>
+            <td>{{quantity}}</td>
+            <td>{{date}}</td>
+        </tr>
+        {%endfor%}
     </tbody>
 </table>
 
@@ -50,16 +53,18 @@
       <tr>
         <th scope="col">#</th>
         <th scope="col">First</th>
-        <th scope="col">Last</th>
+        <th scope="col"></th>
+        <th scope="col">Handle</th>
         <th scope="col">Handle</th>
       </tr>
     </thead>
     <tbody>
-        {% for x in array %}
+        {% for i, x, quantity in items %}
       <tr>
-        <th scope="row">3</th>
-        <td colspan="2">Larry the Bird</td>
-        <td>@twitter</td>
+        <th scope="row">{{i}}</th>
+        <td colspan="2">{{church.name}}</td>
+        <td>{{x.name}}</td>
+        <td>{{quantity}}</td>
       </tr>
       {% endfor %}
     </tbody>
@@ -102,10 +107,10 @@
                 </div>
                 <label for="colFormLabel" class="col-form-label">Church:</label>
                 <div class="col-sm-10">
-                    <select name="dropdown" class="form-control" id="fav_church">
+                    <select name="church_dropdown" class="form-control" id="fav_church">
                         <option value="0" selected="selected">Please select a church</option>
                         {% for x in churches %}
-                        <option value="{{x.church_id}}" name='item_dropdown_church'>{{x.name}}</option>
+                        <option value="{{x.church_id}}">{{x.name}}</option>
                         {% endfor%}
                     </select>
                 </div>
@@ -150,8 +155,8 @@
                             <label for="colFormLabel" class="form-check-label">Save Card for Future Payments</label>
                         </div>
                     </div>
-                    <div class="tab-pane container fade" id="savedcard">
-                        <select name="dropdown" class="form-control" id="fav_church">
+                    <div class="tab-pane container fade" id="savedcard" name="saved_card">
+                        <select name="card_dropdown" class="form-control" id="pleaseselectcard">
                             <option value="0" selected="selected">Please select a card</option>
                             {% for x in cards %}
                             <option value="{{x.card_id}}">{{x.card_num}}</option>
@@ -189,7 +194,7 @@
                     </div>
                     <label for="colFormLabel" class="col-form-label">Church:</label>
                     <div class="col-sm-10">
-                        <select name="dropdown" class="form-control" id="fav_church">
+                        <select name="church_dropdown2" class="form-control" id="fav_church">
                             <option value="" selected="selected">Please select a church</option>
                             {% for x in churches %}
                             <option value="{{x.church_id}}" name='item_dropdown_church'>{{x.name}}</option>
@@ -203,7 +208,7 @@
 
                         <br>
                         
-                        <select name="dropdown" class="form-control col-sm-10" id="fav_church">
+                        <select name="array_dropdown" class="form-control col-sm-10" id="fav_church">
                             <option value="" selected="selected">Please select a Time Slot</option>
                             {% for x in array %}
                             <option value="">{{x}}</option>

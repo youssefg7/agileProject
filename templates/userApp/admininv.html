@@ -21,17 +21,15 @@
             <th>Office</th>
             <th>Age</th>
             <th>Start date</th>
-            <th>Salary</th>
         </tr>
     </thead>
     <tbody>
-        {% for x in array%}
+        {% for i, x, quantity in items  %}
         <tr>
-            <td>Tiger Nixon</td>
-            <td>System Architect</td>
-            <td>Edinburgh</td>
-            <td>61</td>
-            <td>2011-04-25</td>
+            <th scope="row">{{i}}</th>
+            <td>{{church.name}}</td>
+            <td>{{x.name}}</td>
+            <td>{{quantity}}</td>
             <td><input type="submit" class="btn btn-block btn-info" value="Give out" /></td>
         </tr>
         {%endfor%}
@@ -43,7 +41,6 @@
             <th>Office</th>
             <th>Age</th>
             <th>Start date</th>
-            <th>Salary</th>
         </tr>
     </tfoot>
 </table>
