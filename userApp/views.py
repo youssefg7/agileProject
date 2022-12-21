@@ -121,7 +121,7 @@ def index(request):
 
     return render(request, "userApp/index.html", dict) 
 
-def creditCardDonation(request):
+def onlineDonation(request):
     id = request.COOKIES['userid']
     amount = request.POST['Amount']
     selected_card = request.POST.get('saved_card').getlist('card_dropdown')

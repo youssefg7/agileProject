@@ -85,10 +85,10 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs">
     <li class="nav-item">
-      <a class="nav-link active" data-toggle="tab" href="#card">Credit Card Dontation</a>
+      <a class="nav-link active" data-toggle="tab" href="#card">Online Dontation</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#phys">In Person Donation</a>
+      <a class="nav-link" data-toggle="tab" href="#phys">Reserve an In-Person Donation Timeslot</a>
     </li>
     </ul>
 
@@ -98,7 +98,7 @@
     <div class="tab-content">
     <div class="tab-pane container active" id="card">
 
-        <form action="creditCardDonation/" method="post">
+        <form action="onlineDonation/" method="post">
             {% csrf_token %}
             <div class="row mb-3">
                 <label for="colFormLabel" class="col-form-label">Amount:</label>
