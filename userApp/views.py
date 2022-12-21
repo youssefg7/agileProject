@@ -78,7 +78,8 @@ def index(request):
             for x in all_cards:
                 if x.user_id == models.Donor.objects.get(user_id = id):
                     cards.append(x)
-            dict = {'role' : role, 'name': name, 'rolenum': rolenum, 'array': array, 'churches': churches, 'cards': cards}
+            timesolts = models.Timeslots.objects.all()
+            dict = {'role' : role, 'name': name, 'rolenum': rolenum, 'array': array, 'churches': churches, 'cards': all_cards, 'timesolts': timesolts}
         elif rolenum == 1:
             church = models.Admin.objects.get(user_id = id)
             church = church.church_id
@@ -122,59 +123,97 @@ def index(request):
     return render(request, "userApp/index.html", dict) 
 
 def creditCardDonation(request):
+    # chech amout: must be < 2,147,483,648
     id = request.COOKIES['userid']
     amount = request.POST['Amount']
-    selected_card = request.POST.get('saved_card').getlist('card_dropdown')
+    selected_card = request.POST.getlist('card_dropdown')[0]
     church = int(request.POST.getlist('church_dropdown')[0])
     print(selected_card)
     print(church)
-    # if selected_card == 0:
-    #     if church == 0:
-    #         return HttpResponseRedirect(reverse('index'))
+    if selected_card == 0:
+        if church == 0:
+            return HttpResponseRedirect(reverse('index'))
 
-    #     church = models.Church.objects.get(church_id = church)
-    #     cardNumber = request.POST['Cardnum']
-    #     holderName = request.POST['Cardholdname']
-    #     CVV = int(request.POST['CVV'])
+        church = models.Church.objects.get(church_id = church)
+        cardNumber = request.POST['Cardnum']
+        holderName = request.POST['Cardholdname']
+        CVV = int(request.POST['CVV'])
         
-    #     try:
-    #         save = request.POST['saveCard']
-    #     except:
-    #         save = ''
+        try:
+            save = request.POST['saveCard']
+        except:
+            save = ''
         
-    #     expiryDate = request.POST['Expiry']   
-    #     if cardNumber > '9999999999999999' or cardNumber < '1000000000000000':
-    #         return HttpResponseRedirect(reverse('index'))
-    #     if CVV > 999 or CVV < 111:
-    #         return HttpResponseRedirect(reverse('index'))
+        expiryDate = request.POST['Expiry']   
+        if cardNumber > '9999999999999999' or cardNumber < '1000000000000000':
+            return HttpResponseRedirect(reverse('index'))
+        if CVV > 999 or CVV < 111:
+            return HttpResponseRedirect(reverse('index'))
         
-    #     expiryDate = datetime.strptime(expiryDate, '%Y-%m').date()
-    #     # print(expiryDate)
-    #     if date.today().year > expiryDate.year:
-    #         return HttpResponseRedirect(reverse('index'))
-    #     if date.today().month > expiryDate.month and date.today().year == expiryDate.year:
-    #         return HttpResponseRedirect(reverse('index'))
+        expiryDate = datetime.strptime(expiryDate, '%Y-%m').date()
+        if date.today().year > expiryDate.year:
+            return HttpResponseRedirect(reverse('index'))
+        if date.today().month > expiryDate.month and date.today().year == expiryDate.year:
+            return HttpResponseRedirect(reverse('index'))
 
-    #     donor_user = models.Donor.objects.get(user_id = id)
+        if save == 'on':
+            card = models.Card(user_id = models.Donor.objects.get(user_id = id), card_num = cardNumber, cvv = CVV, expiry_date = expiryDate)
+            card.save()
     
-    #     # print(save)
-    #     if save == 'on':
-    #         card = models.Card(user_id = donor_user, card_num = cardNumber, cvv = CVV, expiry_date = expiryDate)
-    #         card.save()
-    
-    # # print(datetime.now().strftime('%Y-%m-%d'))
-    # # print(datetime.now().strftime('%H:%M:%S.%f'))
+    # print(datetime.now().strftime('%Y-%m-%d'))
+    # print(datetime.now().strftime('%H:%M:%S.%f'))
 
-    # reciept = models.Reciept(date = datetime.now().strftime('%Y-%m-%d'), time = datetime.now().strftime('%H:%M:%S.%f'), user_id = donor_user, church_id = church)
-    # reciept.save()
-    # r_details = models.R_Details(reciept_id = reciept.reciept_id, item_id = models.Item.objects.get(name = 'Cash'), item_quantity = amount)
-    # r_details.save()
-    
+    reciept = models.Reciept(
+                date = datetime.now().strftime('%Y-%m-%d'),
+                time = datetime.now().strftime('%H:%M:%S.%f'), 
+                user_id = models.Donor.objects.get(user_id = id), 
+                church_id = models.Church.objects.get(church_id = church))
+
+    reciept.save()
+    r_details = models.R_Details(
+                reciept_id = reciept, item_id = models.Item.objects.get(name = 'Cash'), 
+                item_quantity = amount)
+    r_details.save()
+
+    all_item_details = models.ItemDetails.objects.all()
+
+    ok = 0
+
+    for x in all_item_details:
+        if x.church_id == models.Church.objects.get(church_id = church) and x.item_id == models.Item.objects.get(name = 'Cash'):
+            x.quantity += int(amount)
+            x.save()
+            ok = 1
+            break
+
+    if ok == 0:
+        item_cash = models.ItemDetails(
+                    church_id = models.Church.objects.get(church_id = church),
+                    item_id = models.Item.objects.get(name = 'Cash'),
+                    quantity = amount
+        )
+        item_cash.save()
+
     return HttpResponseRedirect('/')
 
 def inPersonDonation(request):
-    return HttpResponseRedirect('')
 
+    id = request.COOKIES['userid']
+    selected_church = int(request.POST.getlist('church_dropdown2')[0])
+    selected_timeslot = int(request.POST.getlist('timeslot_dropdown')[0])
+    meeting_date = request.POST['meeting_date']
+
+    reserves = models.Reserves(
+                user_id = models.Donor.objects.get(user_id = id),
+                church_id = models.Church.objects.get(church_id = selected_church),
+                date = meeting_date, 
+                time = models.Timeslots.objects.get(time_id = selected_timeslot)
+    )
+
+    reserves.save()
+
+
+    return HttpResponseRedirect('/')
 
 
 def aboutPage(request):

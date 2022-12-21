@@ -35,7 +35,7 @@ class ItemDetails(models.Model):
 
     class Meta:
         ordering = ['-quantity']
-        unique_together = ['church_id','item_id']
+        unique_together = ('church_id','item_id')
 
 
 class PeopleInNeed(models.Model):
@@ -68,7 +68,6 @@ class Card(models.Model):
     card_num = models.CharField(primary_key = True, max_length=254)
     expiry_date = models.DateField()
 
-
 class Servant(models.Model):
     user_id = models.OneToOneField(User, primary_key = True, on_delete = models.CASCADE)
     church_id = models.ForeignKey(Church, on_delete = models.CASCADE)
@@ -89,7 +88,6 @@ class R_Details(models.Model):
         unique_together = ['reciept_id','item_id']
         index_together = ['reciept_id','item_id']
 
-
 class Timeslots(models.Model):
     time_id = models.AutoField(primary_key=True)
     time = models.TimeField()
@@ -102,7 +100,5 @@ class Reserves(models.Model):
     time = models.ForeignKey(Timeslots, on_delete = models.CASCADE)
     user_id = models.ForeignKey(Donor, on_delete = models.CASCADE)
     church_id = models.ForeignKey(Church, on_delete = models.CASCADE)
-
-  
 
 # Create your models here.
