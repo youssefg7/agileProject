@@ -52,7 +52,7 @@ class Need(models.Model):
 
     class Meta:
         ordering = ['due_date']
-        unique_together = ['people_in_need_id','item_id']
+        unique_together = ('people_in_need_id','item_id')
 
 class Donor(models.Model):
     user_id = models.ForeignKey(User, primary_key=True, on_delete = models.CASCADE)
@@ -85,7 +85,7 @@ class R_Details(models.Model):
     item_quantity = models.IntegerField(validators = [MinValueValidator(0)], default = 0)
 
     class Meta:
-        unique_together = ['reciept_id','item_id']
+        unique_together = ('reciept_id','item_id')
         index_together = ['reciept_id','item_id']
 
 class Timeslots(models.Model):

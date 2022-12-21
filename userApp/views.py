@@ -127,9 +127,7 @@ def onlineDonation(request):
     amount = request.POST['Amount']
     selected_card = request.POST.getlist('card_dropdown')[0]
     church = int(request.POST.getlist('church_dropdown')[0])
-    print(selected_card)
-    print(church)
-    if selected_card == 0:
+    if selected_card == '0':
         if church == 0:
             return HttpResponseRedirect(reverse('index'))
 
@@ -154,7 +152,7 @@ def onlineDonation(request):
             return HttpResponseRedirect(reverse('index'))
         if date.today().month > expiryDate.month and date.today().year == expiryDate.year:
             return HttpResponseRedirect(reverse('index'))
-
+        print(save)
         if save == 'on':
             card = models.Card(user_id = models.Donor.objects.get(user_id = id), card_num = cardNumber, cvv = CVV, expiry_date = expiryDate)
             card.save()
@@ -166,7 +164,7 @@ def onlineDonation(request):
                 date = datetime.now().strftime('%Y-%m-%d'),
                 time = datetime.now().strftime('%H:%M:%S.%f'), 
                 user_id = models.Donor.objects.get(user_id = id), 
-                church_id = models.Church.objects.get(church_id = church))
+                church_id = church)
 
     reciept.save()
     r_details = models.R_Details(
@@ -179,7 +177,7 @@ def onlineDonation(request):
     ok = 0
 
     for x in all_item_details:
-        if x.church_id == models.Church.objects.get(church_id = church) and x.item_id == models.Item.objects.get(name = 'Cash'):
+        if x.church_id == church and x.item_id == models.Item.objects.get(name = 'Cash'):
             x.quantity += int(amount)
             x.save()
             ok = 1
@@ -187,7 +185,7 @@ def onlineDonation(request):
 
     if ok == 0:
         item_cash = models.ItemDetails(
-                    church_id = models.Church.objects.get(church_id = church),
+                    church_id = church,
                     item_id = models.Item.objects.get(name = 'Cash'),
                     quantity = amount
         )
