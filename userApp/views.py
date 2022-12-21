@@ -122,8 +122,7 @@ def index(request):
 
     return render(request, "userApp/index.html", dict) 
 
-def creditCardDonation(request):
-    # chech amout: must be < 2,147,483,648
+def onlineDonation(request):
     id = request.COOKIES['userid']
     amount = request.POST['Amount']
     selected_card = request.POST.getlist('card_dropdown')[0]
