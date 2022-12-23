@@ -88,16 +88,23 @@ class R_Details(models.Model):
         unique_together = ('reciept_id','item_id')
         index_together = ['reciept_id','item_id']
 
-class Timeslots(models.Model):
-    time_id = models.AutoField(primary_key=True)
-    time = models.TimeField()
-    church_id = models.ForeignKey(Church, on_delete = models.CASCADE)
-    # hn4of hn-handle el timeslot dy fy anhy ayam
+
+# class Day(models.Model):
+#     day_id = models.AutoField(primary_key=True)
+#     day_name = models.CharField(max_length=254)
+
+# class Timeslots(models.Model):
+#     church_id = models.ForeignKey(Church, on_delete = models.CASCADE)
+#     day = models.ForeignKey(Day, on_delete= models.CASCADE)
+#     time = models.TimeField()
+    
+#     class Meta:
+#         unique_together = ('church_id', 'day')
 
 class Reserves(models.Model):
     reservation_num = models.AutoField(primary_key = True)
     date = models.DateField()
-    time = models.ForeignKey(Timeslots, on_delete = models.CASCADE)
+    time = models.TimeField()
     user_id = models.ForeignKey(Donor, on_delete = models.CASCADE)
     church_id = models.ForeignKey(Church, on_delete = models.CASCADE)
 

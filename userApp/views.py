@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -16,15 +16,14 @@ def adminInvPage(request):
         
         church = models.Admin.objects.get(user_id = id)
         church = church.church_id
-        all_items = models.ItemDetails.objects.all()
+        all_items = models.ItemDetails.objects.filter(church_id = church)
         list1 = []
         list2 = []
         i = 0
         for x in all_items:
-            if x.church_id == church:    
-                list1.append(x.item_id)
-                list2.append(x.quantity)
-                i += 1
+            list1.append(x.item_id)
+            list2.append(x.quantity)
+            i += 1
         items = zip(list(range(1, i+1)), list1, list2)
         dict = {'role' : role, 'name': name, 'rolenum': rolenum, 'church': church, 'items': items, 'array': array}
     except:
@@ -41,21 +40,19 @@ def adminPeopleINPage(request):
         
         church = models.Admin.objects.get(user_id = id)
         church = church.church_id
-        all_needs = models.Need.objects.all()
+        all_needs = models.Need.objects.filter(chuch_id = church)
 
         list1 = []
         list2 = []
         list3 = []
         list4 = []
         i = 0
-        for x in all_needs:
-            print(x)
-            if x.chuch_id == church:    
-                list1.append(x.people_in_need_id)
-                list2.append(x.item_id)
-                list3.append(x.quntity)
-                list4.append(x.due_date)
-                i += 1
+        for x in all_needs:   
+            list1.append(x.people_in_need_id)
+            list2.append(x.item_id)
+            list3.append(x.quntity)
+            list4.append(x.due_date)
+            i += 1
 
         print(i)
         items = zip(list(range(1, i+1)), list1, list2, list3, list4)
@@ -63,6 +60,13 @@ def adminPeopleINPage(request):
     except:
         dict = {'role' : "Anon", 'name': "", 'rolenum': -1}
     return render(request, "userApp/adminPeopleIN.html",dict)
+
+
+def datetime_range(start, end, delta):
+        current = start
+        while current < end:
+            yield current
+            current += delta
 
 def index(request):
     try:
@@ -73,30 +77,29 @@ def index(request):
         array = [1,2]
         if rolenum == 2:
             churches = models.Church.objects.all()
-            cards = []
-            all_cards = models.Card.objects.all()
-            for x in all_cards:
-                if x.user_id == models.Donor.objects.get(user_id = id):
-                    cards.append(x)
-            timesolts = models.Timeslots.objects.all()
-            dict = {'role' : role, 'name': name, 'rolenum': rolenum, 'array': array, 'churches': churches, 'cards': all_cards, 'timesolts': timesolts}
+            cards = models.Card.objects.filter(user_id = id)
+
+            ts = [dt.strftime('%H:%M') for dt in 
+                datetime_range(datetime(2016, 9, 1, 10), datetime(2016, 9, 1, 8+12, 30), 
+                timedelta(minutes=30))]
+
+            dict = {'role' : role, 'name': name, 'rolenum': rolenum, 'array': array, 'churches': churches, 'cards': cards, 'timeslots': ts}
         elif rolenum == 1:
             church = models.Admin.objects.get(user_id = id)
             church = church.church_id
-            all_items = models.ItemDetails.objects.all()
+            all_items = models.ItemDetails.objects.filter(church_id = church)
             list1 = []
             list2 = []
             i = 0
             for x in all_items:
-                if x.church_id == church:    
-                    list1.append(x.item_id)
-                    list2.append(x.quantity)
-                    i += 1
+                list1.append(x.item_id)
+                list2.append(x.quantity)
+                i += 1
                 if i == 5:
                     break
             items = zip(list(range(1, i+1)), list1, list2)
 
-            all_needs = models.Need.objects.all()
+            all_needs = models.Need.objects.filter(chuch_id = church)
 
             list3 = []
             list4 = []
@@ -104,12 +107,11 @@ def index(request):
             list6 = []
             j = 0
             for x in all_needs:
-                if x.chuch_id == church:    
-                    list3.append(x.people_in_need_id)
-                    list4.append(x.item_id)
-                    list5.append(x.quntity)
-                    list6.append(x.due_date)
-                    j += 1
+                list3.append(x.people_in_need_id)
+                list4.append(x.item_id)
+                list5.append(x.quntity)
+                list6.append(x.due_date)
+                j += 1
                 if j == 5:
                     break
 
@@ -196,19 +198,22 @@ def onlineDonation(request):
 def inPersonDonation(request):
 
     id = request.COOKIES['userid']
-    selected_church = int(request.POST.getlist('church_dropdown2')[0])
-    selected_timeslot = int(request.POST.getlist('timeslot_dropdown')[0])
+    selected_church = int(request.POST.get('church_dropdown2'))
+    selected_timeslot = request.POST.get('timeslot_dropdown')
     meeting_date = request.POST['meeting_date']
 
-    reserves = models.Reserves(
-                user_id = models.Donor.objects.get(user_id = id),
-                church_id = models.Church.objects.get(church_id = selected_church),
-                date = meeting_date, 
-                time = models.Timeslots.objects.get(time_id = selected_timeslot)
-    )
+    try:
+        reserves = models.Reserves(
+                    user_id = models.Donor.objects.get(user_id = id),
+                    church_id = models.Church.objects.get(church_id = selected_church),
+                    date = meeting_date, 
+                    time = selected_timeslot
+        )
 
-    reserves.save()
+        reserves.save()
 
+    except:
+        return HttpResponseRedirect(reverse('inPersonDonation'))
 
     return HttpResponseRedirect('/')
 

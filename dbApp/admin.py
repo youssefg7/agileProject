@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Timeslots, PeopleInNeed, Need, User, Card, ItemDetails, Church, Donor, Item, R_Details, Reciept, Reserves, Roles, Servant, Admin
+from .models import PeopleInNeed, Need, User, Card, ItemDetails, Church, Donor, Item, R_Details, Reciept, Reserves, Roles, Servant, Admin
 
 # Register your models here.
 admin.site.register(User)
@@ -16,4 +16,3 @@ admin.site.register(Admin)
 admin.site.register(ItemDetails)
 admin.site.register(PeopleInNeed)
 admin.site.register(Need)
-admin.site.register(Timeslots)

@@ -31,10 +31,10 @@ def myaccountPage(request):
 
 def donorSignupPage(request):
     churches = models.Church.objects.all()
-    ch = []
-    for x in churches:
-        ch.append(x)
-    return render(request, "donorLoginApp/donorSignup.html", {'Churches': ch})
+    # ch = []
+    # for x in churches:
+    #     ch.append(x)
+    return render(request, "donorLoginApp/donorSignup.html", {'Churches': churches})
 
 def donorSignupSubmit(request):
     user1 = models.User(name = request.POST['Name'], email = request.POST['Email'], password = request.POST['Password'], role = 2)
