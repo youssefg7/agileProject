@@ -202,7 +202,12 @@ def inPersonDonation(request):
     selected_timeslot = request.POST.get('timeslot_dropdown')
     meeting_date = request.POST['meeting_date']
 
+
     try:
+        reserved = models.Reserves.objects.filter(church_id = selected_church, date = meeting_date, time = selected_timeslot)
+        print(reserved)
+        if len(reserved) > 0:
+            raise KeyError()
         reserves = models.Reserves(
                     user_id = models.Donor.objects.get(user_id = id),
                     church_id = models.Church.objects.get(church_id = selected_church),
@@ -213,7 +218,7 @@ def inPersonDonation(request):
         reserves.save()
 
     except:
-        return HttpResponseRedirect(reverse('inPersonDonation'))
+        return HttpResponseRedirect(reverse('about'))
 
     return HttpResponseRedirect('/')
 
