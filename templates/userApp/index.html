@@ -28,7 +28,19 @@
     </thead>
     <tbody>
         {% for i, person, item, quantity, date in people  %}
-        <tr>
+            {% if today > date %}
+
+            <tr class="p-3 mb-2 bg-danger text-white">
+
+            {% elif today == date %}
+
+            <tr class="p-3 mb-2 bg-warning text-dark">
+
+            {% else %}
+
+            <tr>
+
+            {% endif %}
             <th scope="row">{{i}}</th>
             <td>{{person.name}}</td>
             <td>{{item.name}}</td>

@@ -46,17 +46,10 @@ def adminPeopleINPage(request):
         list2 = []
         list3 = []
         list4 = []
-        i = 0
-        for x in all_needs:   
-            list1.append(x.people_in_need_id)
-            list2.append(x.item_id)
-            list3.append(x.quntity)
-            list4.append(x.due_date)
-            i += 1
-
-        print(i)
-        items = zip(list(range(1, i+1)), list1, list2, list3, list4)
-        dict = {'role' : role, 'name': name, 'rolenum': rolenum, 'church': church, 'items': items, 'array': array}
+        i = len(all_needs)
+        needs = zip(list(range(1, i+1)), all_needs)
+        today = datetime.today().date
+        dict = {'role' : role, 'name': name, 'rolenum': rolenum, 'church': church, 'needs': needs, 'array': array, 'today':today }
     except:
         dict = {'role' : "Anon", 'name': "", 'rolenum': -1}
     return render(request, "userApp/adminPeopleIN.html",dict)
@@ -116,13 +109,29 @@ def index(request):
                     break
 
             people = zip(list(range(1, j+1)), list3, list4, list5, list6)
-            dict = {'role' : role, 'name': name, 'rolenum': rolenum, 'church': church, 'items': items, 'array': array, 'people': people}
+            today = datetime.today().date
+            dict = {'role' : role, 'name': name, 'rolenum': rolenum, 'church': church, 'items': items, 'array': array, 'people': people, 'today': today}
         else:
             raise KeyError()
     except:
         dict = {'role' : "Anon", 'name': "", 'rolenum': -1}
 
     return render(request, "userApp/index.html", dict) 
+
+def Giveout(request):
+    selected_need = request.POST.get('Giveout')
+    need = models.Need.objects.get(id = selected_need)
+    # church = models.Church.objects.get(church_id = need.chuch_id)
+    print(need.chuch_id.name)
+    print(need.item_id.name)
+    item = models.ItemDetails.objects.get(church_id = need.chuch_id, item_id = need.item_id)
+    if item.quantity > need.quntity:
+        item.quantity -= need.quntity
+        item.save()
+        need.delete()
+    else:
+        return HttpResponseRedirect('/about')
+    return HttpResponseRedirect('/')
 
 def onlineDonation(request):
     id = request.COOKIES['userid']
@@ -218,7 +227,7 @@ def inPersonDonation(request):
         reserves.save()
 
     except:
-        return HttpResponseRedirect(reverse('about'))
+        return HttpResponseRedirect('/about')
 
     return HttpResponseRedirect('/')
 

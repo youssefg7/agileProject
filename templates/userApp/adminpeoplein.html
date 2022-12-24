@@ -13,26 +13,47 @@
 
 
 {% if  rolenum == 1 %} {% comment %} Admin {% endcomment %}
-<table id="example" class="table table-striped" style="width:100%">
+<table id="example" class="table table-hover" style="width:100%">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Position</th>
-            <th>Office</th>
-            <th>Age</th>
-            <th>Start date</th>
-            <th>Salary</th>
+            <th scope="col">Name</th>
+            <th scope="col">Position</th>
+            <th scope="col">Office</th>
+            <th scope="col">Age</th>
+            <th scope="col">Start date</th>
+            <th scope="col">Salary</th>
         </tr>
     </thead>
     <tbody>
-        {% for i, person, item, quantity, date in items  %}
-        <tr>
+        {% for i, need in needs%}
+        {% if today > need.due_date %}
+
+            <tr class="p-3 mb-2 bg-danger text-white">
+
+            {% elif today == need.due_date %}
+
+            <tr class="p-3 mb-2 bg-warning text-dark">
+
+            {% else %}
+
+            <tr>
+
+            {% endif %}
             <th scope="row">{{i}}</th>
-            <td>{{person.name}}</td>
-            <td>{{item.name}}</td>
-            <td>{{quantity}}</td>
-            <td>{{date}}</td>
-            <td><input type="submit" class="btn btn-block btn-info" value="Give out" /></td>
+            <td>{{need.people_in_need_id.name}}</td>
+            <td>{{need.item_id.name}}</td>
+            <td>{{need.quntity}}</td>
+            <td>{{need.due_date}}</td>
+            {% comment %} <td><input type="submit" class="btn btn-block btn-info" value={{need.id}} />Give out</td> {% endcomment %}
+            <td> 
+                 <div>
+                    <form action="{% url 'userApp:Giveout' %}" method="post">
+                    {% csrf_token %}
+                    <input name="Giveout" class="d-none" value='{{need.id}}' >
+                    <input class="btn btn-block btn-info" type="submit" value="submit">
+                    </form>
+                </div>
+                
         </tr>
         {%endfor%}
     </tbody>
