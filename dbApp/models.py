@@ -45,10 +45,10 @@ class PeopleInNeed(models.Model):
 class Need(models.Model):
     people_in_need_id = models.ForeignKey(PeopleInNeed, on_delete = models.CASCADE, default=-1)
     item_id = models.ForeignKey(Item, on_delete = models.CASCADE)
-    quntity = models.IntegerField()
+    quantity = models.IntegerField()
     due_date = models.DateField(null=True)
     period = models.IntegerField()
-    chuch_id = models.ForeignKey(Church, on_delete = models.CASCADE, default=-1)
+    church_id = models.ForeignKey(Church, on_delete = models.CASCADE, default=-1)
 
     class Meta:
         ordering = ['due_date']

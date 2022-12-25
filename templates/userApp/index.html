@@ -27,8 +27,8 @@
       </tr>
     </thead>
     <tbody>
-        {% for i, person, item, quantity, date in people  %}
-            {% if today > date %}
+        {% for i, need in needs%}
+            {% if today > need.due_date %}
 
             <tr class="p-3 mb-2 bg-danger text-white">
 
@@ -42,10 +42,10 @@
 
             {% endif %}
             <th scope="row">{{i}}</th>
-            <td>{{person.name}}</td>
-            <td>{{item.name}}</td>
-            <td>{{quantity}}</td>
-            <td>{{date}}</td>
+            <td>{{need.people_in_need_id.name}}</td>
+            <td>{{need.item_id.name}}</td>
+            <td>{{need.quantity}}</td>
+            <td>{{need.due_date}}</td>
         </tr>
         {%endfor%}
     </tbody>
@@ -71,12 +71,12 @@
       </tr>
     </thead>
     <tbody>
-        {% for i, x, quantity in items %}
+        {% for i, item in items %}
       <tr>
         <th scope="row">{{i}}</th>
         <td colspan="2">{{church.name}}</td>
-        <td>{{x.name}}</td>
-        <td>{{quantity}}</td>
+        <td>{{item.item_id.name}}</td>
+        <td>{{item.quantity}}</td>
       </tr>
       {% endfor %}
     </tbody>
