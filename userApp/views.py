@@ -106,10 +106,14 @@ def Giveout(request):
     if item.quantity > need.quantity:
         item.quantity -= need.quantity
         item.save()
-        need.delete()
     else:
         return HttpResponseRedirect('/about')
         # alert
+    if need.period == 0:
+        need.delete()
+    else:
+        need.due_date += timedelta(days=7)
+        need.save()
     return HttpResponseRedirect('/')
 
 def onlineDonation(request):
@@ -119,7 +123,7 @@ def onlineDonation(request):
     church = int(request.POST.get('church_dropdown'))
     if selected_card == '0':
         if church == 0:
-            return HttpResponseRedirect(reverse('index'))
+            return HttpResponseRedirect('/', {'alert': 1})
             # alert
 
         church = models.Church.objects.get(church_id = church)
@@ -191,7 +195,6 @@ def inPersonDonation(request):
     selected_church = int(request.POST.get('church_dropdown2'))
     selected_timeslot = request.POST.get('timeslot_dropdown')
     meeting_date = request.POST['meeting_date']
-
 
     try:
         reserved = models.Reserves.objects.filter(church_id = selected_church, date = meeting_date, time = selected_timeslot)

@@ -42,7 +42,7 @@
             <th scope="row">{{i}}</th>
             <td>{{need.people_in_need_id.name}}</td>
             <td>{{need.item_id.name}}</td>
-            <td>{{need.quntity}}</td>
+            <td>{{need.quantity}}</td>
             <td>{{need.due_date}}</td>
             {% comment %} <td><input type="submit" class="btn btn-block btn-info" value={{need.id}} />Give out</td> {% endcomment %}
             <td> 
@@ -50,7 +50,7 @@
                     <form action="{% url 'userApp:Giveout' %}" method="post">
                     {% csrf_token %}
                     <input name="Giveout" class="d-none" value='{{need.id}}' >
-                    <input class="btn btn-block btn-info" type="submit" value="submit">
+                    <input class="btn btn-block btn-info" type="submit" value="Give out">
                     </form>
                 </div>
                 

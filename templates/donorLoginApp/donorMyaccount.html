@@ -2,7 +2,7 @@
 
 {% block navbar %} 
 
-{% include 'navbar.html' with prole=rolenum %}
+{% include 'navbar.html' with prole=user.role %}
 
 {% endblock navbar %}
 
@@ -15,18 +15,32 @@
       margin-top: auto;
       margin-bottom: auto;
     " class="position-relative">
-        <h3>Your Church: </h3> <! place church name here>
         <h3>Your Account:</h3>
-        <form action="donorLoginSubmit/" method="post">
+        <form action="{% url 'myAccountSubmit' %}" method="post">
             {% csrf_token %}
             <div class="row mb-3">
+                {% if user.role == 1 %}
+                <label for="colFormLabel" class="col-form-label">Church:</label>
+                <div class="col-sm-10">
+                    <input type="Email" name="Email" class="form-control" id="colFormLabel" value='{{church.name}}' readonly/>
+                 </div>
+                 <label for="colFormLabel" class="col-form-label">Change Church:</label>
+                 <div class="col-sm-10">
+                    <select name="church_dropdown" class="form-control" id="fav_church">
+                        <option value="0" selected="selected">Please select a church</option>
+                        {% for x in churches %}
+                        <option value="{{x.church_id}}">{{x.name}}</option>
+                        {% endfor%}
+                    </select>
+                </div>
+                {% endif %}
                 <label for="colFormLabel" class="col-form-label">Email:</label>
                 <div class="col-sm-10">
-                    <input type="Email" name="Email" class="form-control" id="colFormLabel" value="example@example.com" readonly/>
+                    <input type="Email" name="Email" class="form-control" id="colFormLabel" value='{{user.email}}' readonly/>
                 </div>
                 <label for="colFormLabel" class="col-form-label">Name:</label>
                 <div class="col-sm-10">
-                    <input type="Text" name="Name" class="form-control" id="colFormLabel" value="John Doe"/>
+                    <input type="Text" name="Name" class="form-control" id="colFormLabel" placeholder='{{user.name}}'/>
                 </div>
                 <label for="colFormLabel" class="col-form-label">Password:</label>
                 <div class="col-sm-10">
@@ -37,50 +51,114 @@
         </form>
     
 
-{% if 1 %}
+{% if user.role == 1 %}
 
-<button type="button" class="btn btn-primary position-absolute end-0" data-toggle="modal" data-target="#myModal">Add Admin to your Church</button>
-<div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Add User</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-        <div style="display: flex; width: 100%; height: 90%">
-        <div style="
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: auto;
-        margin-bottom: auto;
-        " class="position-relative">
-            <form action="donorSignupSubmit/" method="post">
-                {% csrf_token %}
-                <div class="row mb-3">
-                    <label for="colFormLabel" class="col-form-label">Email:</label>
-                    <div class="col-sm-10">
-                        <input type="Email" name="Email" class="form-control" id="colFormLabel" placeholder="example@example.com" />
+<button type="button" class="btn btn-primary position-absolute end-0" data-toggle="modal" data-target="#adminModal">Add Admin</button>
+<br>
+<br>
+<button type="button" class="btn btn-primary position-absolute end-0" data-toggle="modal" data-target="#peopleinneedModal">Add People in need</button>
+<form action="{% url 'addAdminSubmit' %}" method="post">
+    {% csrf_token %}
+    <div class="modal fade" id="adminModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h4 class="modal-title">Add User</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+            <div style="display: flex; width: 100%; height: 90%">
+            <div style="
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: auto;
+            margin-bottom: auto;
+            " class="position-relative">
+                    <div class="row mb-3">
+                        <label for="colFormLabel" class="col-form-label">Email:</label>
+                        <div class="col-sm-10">
+                            <input type="Email" name="Email" class="form-control" id="colFormLabel" placeholder="example@example.com" />
+                        </div>
+                        <label for="colFormLabel" class="col-form-label">Name:</label>
+                        <div class="col-sm-10">
+                            <input type="Text" name="Name" class="form-control" id="colFormLabel" placeholder="Your Name" />
+                        </div>
                     </div>
-                    <label for="colFormLabel" class="col-form-label">Name:</label>
-                    <div class="col-sm-10">
-                        <input type="Text" name="Name" class="form-control" id="colFormLabel" placeholder="Your Name" />
-                    </div>
-                </div>
-                    <input type="submit" class="btn btn-primary" value="Add Admin"/>
-            </form>
+                        <input type="submit" class="btn btn-primary" value="Add Admin"/>
+            </div>
+            </div>
+            </div>
+            {% comment %}
+            <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+            {% endcomment %}
         </div>
         </div>
-        </div>
-        {% comment %}
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-        {% endcomment %}
-      </div>
     </div>
-</div>
-
+</form>
+<form action="{% url 'addpeopleinneedSubmit' %}" method="post">
+    {% csrf_token %}
+    <div class="modal fade" id="peopleinneedModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h4 class="modal-title">Add Person in Need</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+            <div style="display: flex; width: 100%; height: 90%">
+            <div style="
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: auto;
+            margin-bottom: auto;
+            " class="position-relative">
+                    <div class="row mb-3">
+                        <label for="colFormLabel" class="col-form-label">Person in Need:</label>
+                        <div class="col-sm-10" >
+                                <input list="browsers" name="Peopleinneed" />
+                                <datalist id="browsers" >
+                                    {% for person in people %}
+                                    <option value="{{person.name}}">
+                                    {% endfor%}
+                                </datalist>
+                        </div>
+                        <label for="colFormLabel" class="col-form-label">Item:</label>
+                        <div class="col-sm-10">
+                            <select name="item_dropdown" class="form-control" id="fav_church">
+                                <option value="0" selected="selected">Please select an item</option>
+                                {% for item in items %}
+                                <option value="{{item.item_id}}">{{item.name}}</option>
+                                {% endfor%}
+                            </select>
+                        </div>
+                        <label for="colFormLabel" class="col-form-label">Quantity:</label>
+                        <div class="col-sm-10">
+                            <input type="number" name="Quantity" class="form-control" id="colFormLabel" placeholder="Quantity" />
+                        </div>
+                        <label for="colFormLabel" class="col-form-label">Period in Days:</label>
+                        <div class="col-sm-10">
+                            <input type="number" name="Period" class="form-control" id="colFormLabel" placeholder="Period" />
+                        </div>
+                        <label for="colFormLabel" class="col-form-label">Due Date:</label>
+                        <div class="col-sm-10">
+                            <input type="date" name="due_date" class="form-control" id="colFormLabel" placeholder="YYYY-MM-DD " />
+                        </div>
+                    </div>
+                        <input type="submit" class="btn btn-primary" value="Add Admin"/>
+            </div>
+            </div>
+            </div>
+            {% comment %}
+            <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+            {% endcomment %}
+        </div>
+        </div>
+    </div>
+</form>
 {% endif %}
 
 </div>
