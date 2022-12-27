@@ -11,4 +11,5 @@ urlpatterns = [
     path('myAccountSubmit/', views.myAccountSubmit, name='myAccountSubmit'),
     path('addAdminSubmit/', views.addAdminSubmit, name='addAdminSubmit'),
     path('addpeopleinneedSubmit/', views.addpeopleinneedSubmit, name='addpeopleinneedSubmit'),
+    path('inventorySubmit/', views.inventorySubmit, name='inventorySubmit'),
 ]

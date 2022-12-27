@@ -35,7 +35,8 @@ def myaccountPage(request):
         churches = models.Church.objects.filter(~Q(church_id = church.church_id))
         items = models.Item.objects.all()
         people = models.PeopleInNeed.objects.all()
-        dict = {'user':user, 'church': church, 'churches':churches, 'items':items, 'people':people}
+        donors = models.Donor.objects.all()
+        dict = {'user':user, 'church': church, 'churches':churches, 'items':items, 'people':people, 'donors': donors}
     elif user.role == 2:
         dict = {'user':user}
     return render(request, "donorLoginApp/donorMyaccount.html", dict)
@@ -77,35 +78,119 @@ def addAdminSubmit(request):
 
 def addpeopleinneedSubmit(request):
     id = request.COOKIES['userid']
-    name = request.POST['Peopleinneed']
-    item = int(request.POST.get('item_dropdown'))
-    quantity = request.POST['Quantity']
+    person = request.POST.get('people_dropdown')
+    item = request.POST['item_datalist1']
+    quantity = request.POST['Quantity1']
     period = request.POST['Period']
     date = request.POST['due_date']
-    church = models.Admin.objects.get(user_id = id).church_id
-        
-    try:
-        person = models.PeopleInNeed.objects.get(name = name)
-    except:
-        person = models.PeopleInNeed(name = name)
-        person.save()
 
-    print(item)
-    item = models.Item.objects.get(item_id = item)
+    church = models.Admin.objects.get(user_id = id).church_id
+    date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
     
+    if quantity != '':
+        quantity = int(quantity)
     
+    if period != '':
+        period = int(period)
+
+    try:
+        item = models.Item.objects.get(name = item)
+    except:
+        item = models.Item(name = item)
+        item.save()
+        
+    if person == '-1':
+        name = request.POST['person_name']
+        ID = request.POST['person_ID']
+        if name == '' or ID == '':
+            pass
+            # alert
+        person = models.PeopleInNeed(id = ID, name = name)
+        person.save()
+    elif person == '0':
+        pass
+        # alert
+    else:
+        person = models.PeopleInNeed.objects.get(id = person)
+
     try:
         need = models.Need.objects.filter(church_id = church).get(item_id = item.item_id, people_in_need_id = person.id)
-        need.quantity += int(quantity)
+        need.quantity += quantity
         need.save()
     except:
-        date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
-        need = models.Need(church_id = church, item_id = item, people_in_need_id = person, quantity = int(quantity), due_date = date, period = int(period))
+        if quantity == '' or period == '':
+            pass
+            # alert
+        need = models.Need(church_id = church, item_id = item, people_in_need_id = person, quantity = quantity, due_date = date, period = period)
         need.save()
-        print(55)
 
 
     return HttpResponseRedirect('/')
+
+def inventorySubmit(request):
+    id = request.COOKIES['userid']
+    donor = request.POST.get('donor_dropdown')
+    item = request.POST['item_datalist2']
+    quantity = request.POST['Quantity2']
+
+    church = models.Admin.objects.get(user_id = id).church_id
+    date = datetime.datetime.today()
+    
+    if quantity != '':
+        quantity = int(quantity)
+    else:
+        pass
+        # alert
+
+    try:
+        item = models.Item.objects.get(name = item)
+    except:
+        item = models.Item(name = item)
+        item.save()
+        
+    if donor == '-1':
+        name = request.POST['donor_name']
+        email = request.POST['donor_email']
+        if name == '' or email == '':
+            pass
+            # alert
+        user = models.User(name = name, email = email, role = 2, password = 'Donor')
+        user.save()
+        donor = models.Donor(user_id = user)
+        donor.save()
+    elif donor == '0':
+        pass
+        # alert
+    else:
+        donor = models.Donor.objects.get(user_id = int(donor))
+
+
+    reciept = models.Reciept(
+                date = datetime.datetime.now().date(),
+                time = datetime.datetime.now().time(), 
+                user_id = donor, 
+                church_id = church)
+    reciept.save()
+
+    r_details = models.R_Details(
+                reciept_id = reciept, item_id = item, 
+                item_quantity = quantity)
+    r_details.save()
+
+    
+    try:
+        item_details = models.ItemDetails.objects.get(church_id = church, item_id = item)
+        item_details.quantity += quantity
+
+    except:
+        item_details = models.ItemDetails(
+                    church_id = church,
+                    item_id = item,
+                    quantity = quantity)
+    
+    item_details.save()
+
+    return HttpResponseRedirect('')
 
 def donorSignupPage(request):
     churches = models.Church.objects.all()

@@ -102,7 +102,11 @@ def Giveout(request):
     # church = models.Church.objects.get(church_id = need.church_id)
     print(need.church_id.name)
     print(need.item_id.name)
-    item = models.ItemDetails.objects.get(church_id = need.church_id, item_id = need.item_id)
+    try:
+        item = models.ItemDetails.objects.get(church_id = need.church_id, item_id = need.item_id)
+    except:
+        return HttpResponseRedirect('/')
+        # alert
     if item.quantity > need.quantity:
         item.quantity -= need.quantity
         item.save()
@@ -156,9 +160,9 @@ def onlineDonation(request):
         if save == 'on':
             card = models.Card(user_id = models.Donor.objects.get(user_id = id), card_num = cardNumber, cvv = CVV, expiry_date = expiryDate)
             card.save()
-    
-    # print(datetime.now().strftime('%Y-%m-%d'))
-    # print(datetime.now().strftime('%H:%M:%S.%f'))
+
+    if amount != '':
+        amount = int(amount)
 
     reciept = models.Reciept(
                 date = datetime.now().strftime('%Y-%m-%d'),
@@ -176,7 +180,7 @@ def onlineDonation(request):
     
     try:
         cash_item = models.ItemDetails.objects.get(church_id = church, item_id = cash_id)
-        cash_item.quantity += int(amount)
+        cash_item.quantity += amount
         cash_item.save()
 
     except:

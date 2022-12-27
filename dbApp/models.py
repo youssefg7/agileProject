@@ -39,7 +39,7 @@ class ItemDetails(models.Model):
 
 
 class PeopleInNeed(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.CharField(max_length=254, primary_key=True)
     name = models.CharField(max_length=254)
 
 class Need(models.Model):
