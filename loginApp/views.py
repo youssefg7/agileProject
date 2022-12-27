@@ -30,14 +30,14 @@ def donorLoginSubmit(request):
 def myaccountPage(request):
     id = request.COOKIES['userid']
     user = models.User.objects.get(user_id = id)
-    if user.role == 1:
+    if user.role.role_number == 1:
         church = models.Admin.objects.get(user_id = id).church_id
         churches = models.Church.objects.filter(~Q(church_id = church.church_id))
         items = models.Item.objects.all()
         people = models.PeopleInNeed.objects.all()
         donors = models.Donor.objects.all()
         dict = {'user':user, 'church': church, 'churches':churches, 'items':items, 'people':people, 'donors': donors}
-    elif user.role == 2:
+    elif user.role.role_number == 2:
         dict = {'user':user}
     return render(request, "donorLoginApp/donorMyaccount.html", dict)
 
@@ -53,7 +53,7 @@ def myAccountSubmit(request):
         user.password = password
     print(user.password)
     user.save()
-    if user.role == 1:
+    if user.role.role_number == 1:
         admin = models.Admin.objects.get(user_id = user.user_id)
         church = request.POST.get('church_dropdown')
         if church != '0':
@@ -69,7 +69,7 @@ def addAdminSubmit(request):
         return HttpResponseRedirect('/about')
         # alert
     name = request.POST['Name']
-    user = models.User(email = email, name = name, password = 'Admin', role = 1)
+    user = models.User(email = email, name = name, password = 'Admin', role = models.Roles.objects.get(role_name = 'Admin'))
     user.save()
     church = models.Admin.objects.get(user_id = id).church_id
     admin = models.Admin(user_id = user, church_id = church)
@@ -154,7 +154,7 @@ def inventorySubmit(request):
         if name == '' or email == '':
             pass
             # alert
-        user = models.User(name = name, email = email, role = 2, password = 'Donor')
+        user = models.User(name = name, email = email, role = models.Roles.objects.get(role_name = 'Donor'), password = 'Donor')
         user.save()
         donor = models.Donor(user_id = user)
         donor.save()
@@ -197,7 +197,7 @@ def donorSignupPage(request):
     return render(request, "donorLoginApp/donorSignup.html", {'Churches': churches})
 
 def donorSignupSubmit(request):
-    user1 = models.User(name = request.POST['Name'], email = request.POST['Email'], password = request.POST['Password'], role = 2)
+    user1 = models.User(name = request.POST['Name'], email = request.POST['Email'], password = request.POST['Password'], role = models.Roles.objects.get(role_name = 'Donor'))
     user1.save()
     selected_churches = request.POST.getlist("item_checkbox")
     churches = []

@@ -2,7 +2,7 @@
 
 {% block navbar %} 
 
-{% include 'navbar.html' with prole=user.role %}
+{% include 'navbar.html' with prole=user.role.role_number %}
 
 {% endblock navbar %}
 
@@ -19,7 +19,7 @@
         <form action="{% url 'myAccountSubmit' %}" method="post">
             {% csrf_token %}
             <div class="row mb-3">
-                {% if user.role == 1 %}
+                {% if user.role.role_number == 1 %}
                 <label for="colFormLabel" class="col-form-label">Church:</label>
                 <div class="col-sm-10">
                     <input type="Email" name="Email" class="form-control" id="colFormLabel" value='{{church.name}}' readonly/>
@@ -51,7 +51,7 @@
         </form>
     
 
-{% if user.role == 1 %}
+{% if user.role.role_number == 1 %}
 
 <button type="button" class="btn btn-primary position-absolute end-0" data-toggle="modal" data-target="#adminModal">Add Admin</button>
 <br>

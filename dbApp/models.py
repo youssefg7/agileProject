@@ -17,7 +17,7 @@ class User(models.Model):
     name = models.CharField(max_length = 254)
     email = models.EmailField(max_length = 254, unique = True)
     password = models.CharField(max_length = 32)
-    role = models.IntegerField()
+    role = models.ForeignKey(Roles, on_delete=models.CASCADE)
 
 class Item(models.Model):
     item_id = models.AutoField(primary_key = True)

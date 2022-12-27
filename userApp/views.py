@@ -9,9 +9,7 @@ from dbApp import models
 def adminInvPage(request):
     try:
         id = request.COOKIES['userid']
-        rolenum = models.User.objects.get(user_id = id).role
-        role = models.Roles.objects.get(role_number = rolenum).role_name
-        name = models.User.objects.get(user_id = id).name
+        user = models.User.objects.get(user_id = id)
         array = [1,2]
         
         church = models.Admin.objects.get(user_id = id)
@@ -25,7 +23,7 @@ def adminInvPage(request):
             list2.append(x.quantity)
             i += 1
         items = zip(list(range(1, i+1)), list1, list2)
-        dict = {'role' : role, 'name': name, 'rolenum': rolenum, 'church': church, 'items': items, 'array': array}
+        dict = {'user':user, 'church': church, 'items': items, 'array': array}
     except:
         dict = {'role' : "Anon", 'name': "", 'rolenum': -1}
     return render(request, "userApp/admininv.html",dict)
@@ -33,23 +31,17 @@ def adminInvPage(request):
 def adminPeopleINPage(request):
     try:
         id = request.COOKIES['userid']
-        rolenum = models.User.objects.get(user_id = id).role
-        role = models.Roles.objects.get(role_number = rolenum).role_name
-        name = models.User.objects.get(user_id = id).name
+        user = models.User.objects.get(user_id = id)
         array = [1,2]
         
         church = models.Admin.objects.get(user_id = id)
         church = church.church_id
         all_needs = models.Need.objects.filter(church_id = church)
 
-        list1 = []
-        list2 = []
-        list3 = []
-        list4 = []
         i = len(all_needs)
         needs = zip(list(range(1, i+1)), all_needs)
         today = datetime.today().date
-        dict = {'role' : role, 'name': name, 'rolenum': rolenum, 'church': church, 'needs': needs, 'array': array, 'today':today }
+        dict = {'user':user, 'church': church, 'needs': needs, 'array': array, 'today':today }
     except:
         dict = {'role' : "Anon", 'name': "", 'rolenum': -1}
     return render(request, "userApp/adminPeopleIN.html",dict)
@@ -64,11 +56,9 @@ def datetime_range(start, end, delta):
 def index(request):
     try:
         id = request.COOKIES['userid']
-        rolenum = models.User.objects.get(user_id = id).role
-        role = models.Roles.objects.get(role_number = rolenum).role_name
-        name = models.User.objects.get(user_id = id).name
+        user = models.User.objects.get(user_id = id)
         array = [1,2]
-        if rolenum == 2:
+        if user.role.role_number == 2:
             churches = models.Church.objects.all()
             cards = models.Card.objects.filter(user_id = id)
 
@@ -76,8 +66,8 @@ def index(request):
                 datetime_range(datetime(2016, 9, 1, 10), datetime(2016, 9, 1, 8+12, 30), 
                 timedelta(minutes=30))]
 
-            dict = {'role' : role, 'name': name, 'rolenum': rolenum, 'array': array, 'churches': churches, 'cards': cards, 'timeslots': ts}
-        elif rolenum == 1:
+            dict = {'user':user, 'array': array, 'churches': churches, 'cards': cards, 'timeslots': ts}
+        elif user.role.role_number == 1:
             church = models.Admin.objects.get(user_id = id)
             church = church.church_id
 
@@ -88,7 +78,7 @@ def index(request):
             needs = zip(list(range(1, min(5, len(all_needs)) + 1)), all_needs)
             today = datetime.today().date
 
-            dict = {'role' : role, 'name': name, 'rolenum': rolenum, 'church': church, 'items': items, 'array': array, 'needs': needs, 'today': today}
+            dict = {'user':user, 'church': church, 'items': items, 'array': array, 'needs': needs, 'today': today}
         else:
             raise KeyError()
     except:
@@ -99,7 +89,6 @@ def index(request):
 def Giveout(request):
     selected_need = request.POST.get('Giveout')
     need = models.Need.objects.get(id = selected_need)
-    # church = models.Church.objects.get(church_id = need.church_id)
     print(need.church_id.name)
     print(need.item_id.name)
     try:
@@ -116,7 +105,7 @@ def Giveout(request):
     if need.period == 0:
         need.delete()
     else:
-        need.due_date += timedelta(days=7)
+        need.due_date += timedelta(days=need.period)
         need.save()
     return HttpResponseRedirect('/')
 
@@ -165,8 +154,8 @@ def onlineDonation(request):
         amount = int(amount)
 
     reciept = models.Reciept(
-                date = datetime.now().strftime('%Y-%m-%d'),
-                time = datetime.now().strftime('%H:%M:%S.%f'), 
+                date = datetime.now().date(),
+                time = datetime.now().time(), 
                 user_id = models.Donor.objects.get(user_id = id), 
                 church_id = models.Church.objects.get(church_id = church))
 
@@ -185,7 +174,7 @@ def onlineDonation(request):
 
     except:
         item_cash = models.ItemDetails(
-                    church_id = models.Church.objects.get(church_id = church),
+                    church_id = models.Church.objects.get(church_id = church), # check church_id = church
                     item_id = models.Item.objects.get(name = 'Cash'),
                     quantity = amount
         )
@@ -223,11 +212,10 @@ def inPersonDonation(request):
 
 def aboutPage(request):
     try:
-        y = models.User.objects.get(user_id = request.COOKIES['userid']).role
-        role = models.Roles.objects.get(role_number = y).role_name
-        name = models.User.objects.get(user_id = request.COOKIES['userid']).name
+        id = request.COOKIES['userid']
+        user = models.User.objects.get(user_id = id)
         state = 1
-        dict = {'role' : role, 'name': name, 'state': state, 'rolenum': y}
+        dict = {'user':user, 'state': state}
     except:
         state = 2
         dict = {'role' : "", 'name': "", 'state': state, 'rolenum': -1}

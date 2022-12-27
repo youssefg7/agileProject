@@ -2,16 +2,16 @@
 
 {% block navbar %} 
 
-{% include 'navbar.html' with prole=rolenum %}
+{% include 'navbar.html' with prole=user.role.role_number %}
 
 {% endblock navbar %}
 
 {% block content %}
 
-{% if rolenum == 1 %} {% comment %} Admin {% endcomment %}
+{% if user.role.role_number == 1 %} {% comment %} Admin {% endcomment %}
 
 <br>
-<h2 class="text-center">Hello {{name}}!</h2>
+<h2 class="text-center">Hello {{user.name}}!</h2>
 <br>
 
 <p>People in need most due: </p>
@@ -86,10 +86,10 @@
     <button type="button" class="btn btn-primary position-absolute end-0" >View More Details</button>
     </a>
 
-{% elif rolenum == 2 %} {% comment %} Donor {% endcomment %}
+{% elif user.role.role_number == 2 %} {% comment %} Donor {% endcomment %}
 
 <br>
-<h2 class="text-center">Hello {{name}}!</h2>
+<h2 class="text-center">Hello {{user.name}}!</h2>
 <br>
 
 
