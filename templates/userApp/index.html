@@ -8,6 +8,18 @@
 
 {% block content %}
 
+{% if alert == 1 %}
+<br>
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{message}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+
+{% endif %}
+
+
 {% if user.role.role_number == 1 %} {% comment %} Admin {% endcomment %}
 
 <br>

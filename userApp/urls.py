@@ -5,7 +5,7 @@ app_name = 'userApp'
 
 
 urlpatterns = [
-    path("", views.index, name="index"),
+    path('', views.index, name="index"),
     path("about/", views.aboutPage, name="aboutPage"),
     path('onlineDonation/', views.onlineDonation, name='onlineDonation'),
     path('inPersonDonation/', views.inPersonDonation, name='inPersonDonation'),

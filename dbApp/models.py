@@ -39,7 +39,7 @@ class ItemDetails(models.Model):
 
 
 class PeopleInNeed(models.Model):
-    id = models.CharField(max_length=254, primary_key=True)
+    id = models.CharField(max_length=14, primary_key=True)
     name = models.CharField(max_length=254)
 
 class Need(models.Model):
@@ -68,9 +68,6 @@ class Card(models.Model):
     card_num = models.CharField(primary_key = True, max_length=254)
     expiry_date = models.DateField()
 
-class Servant(models.Model):
-    user_id = models.OneToOneField(User, primary_key = True, on_delete = models.CASCADE)
-    church_id = models.ForeignKey(Church, on_delete = models.CASCADE)
 
 class Reciept(models.Model):
     reciept_id = models.AutoField(primary_key = True)
@@ -79,30 +76,18 @@ class Reciept(models.Model):
     user_id = models.ForeignKey(Donor, on_delete = models.PROTECT)
     church_id = models.ForeignKey(Church, on_delete = models.CASCADE)
 
-class R_Details(models.Model):
+class RecieptDetails(models.Model):
     reciept_id = models.ForeignKey(Reciept, on_delete = models.CASCADE)
     item_id = models.ForeignKey(Item, on_delete = models.PROTECT)
     item_quantity = models.IntegerField(validators = [MinValueValidator(0)], default = 0)
 
     class Meta:
         unique_together = ('reciept_id','item_id')
-        index_together = ['reciept_id','item_id']
+        index_together = ('reciept_id','item_id')
 
 
-# class Day(models.Model):
-#     day_id = models.AutoField(primary_key=True)
-#     day_name = models.CharField(max_length=254)
-
-# class Timeslots(models.Model):
-#     church_id = models.ForeignKey(Church, on_delete = models.CASCADE)
-#     day = models.ForeignKey(Day, on_delete= models.CASCADE)
-#     time = models.TimeField()
-    
-#     class Meta:
-#         unique_together = ('church_id', 'day')
-
-class Reserves(models.Model):
-    reservation_num = models.AutoField(primary_key = True)
+class Reservation(models.Model):
+    reservation_id = models.AutoField(primary_key = True)
     date = models.DateField()
     time = models.TimeField()
     user_id = models.ForeignKey(Donor, on_delete = models.CASCADE)
