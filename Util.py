@@ -85,12 +85,12 @@ def toInt(x):
 def checkOnlineDonation(cardNumber, CVV, date):
     if cardNumber > '9999999999999999' or cardNumber < '1000000000000000':
             return False
-    if CVV > 999 or CVV < 111:
+    if CVV > 999 or CVV < 100:
         return False
     if date.today().year > date.year:
-            return HttpResponseRedirect(reverse('index'))
+            return False
     if date.today().month > date.month and date.today().year == date.year:
-        return HttpResponseRedirect(reverse('index'))
+        return False
     return True
 
 def saveCard(id, cardNumber, CVV, expiryDate):
@@ -139,9 +139,14 @@ def saveItemDetailsGiveout(church, item, need):
     return True
 
 def saveReservation(id, church, date, timeslot):
+    if church == 0:
+        return 1
+    if date < datetime.today().date:
+        return 2
     reserved = models.Reservation.objects.filter(church_id = church, date = date, time = timeslot)
+
     if len(reserved) > 0:
-        return False
+        return 3
     reserves = models.Reservation(
                 user_id = getDonor(id),
                 church_id = getChurch(church),
@@ -150,7 +155,7 @@ def saveReservation(id, church, date, timeslot):
     )
     reserves.save()
 
-    return True
+    return 0
 
 def getRole(name):
     try:
@@ -160,7 +165,7 @@ def getRole(name):
         role.save()
     return role
 
-def saveUser(name, email, role_name, password, church):
+def saveUser(name, email, role_name, password, church = 0):
     role = getRole(role_name)
     user = models.User(name = name, email = email, role = role, password = password)
     user.save()

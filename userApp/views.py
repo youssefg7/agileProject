@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from dbApp import models
 from Util import *
@@ -33,6 +33,11 @@ def adminPeopleINPage(request):
     return render(request, "userApp/adminPeopleIN.html",dict)
 
 def index(request):
+    if request.session['done'] == 0:
+        request.session['done'] = 1
+    else:
+        request.session['alert'] = 0
+        request.session['message'] = ""
     try:
         id = getId(request)
         user = getUser(id)
@@ -62,18 +67,27 @@ def Giveout(request):
     item = need.item_id
     
     if not saveItemDetailsGiveout(church, item, need):
-        return HttpResponseRedirect('/')    
+        request.session['done'] = 0
+        request.session['alert'] = 1
+        request.session['message'] = "Can't Giveout This Item"
+        return redirect('userApp:index')
     needDueDateAlter(need)
-    return HttpResponseRedirect('/')
+    request.session['done'] = 0
+    request.session['alert'] = 2
+    request.session['message'] = "Giveout Done"
+    return redirect('userApp:index')
 
 def onlineDonation(request):
     id = getId(request)
     amount = request.POST['Amount']
     selected_card = request.POST.get('card_dropdown')
     church = int(request.POST.get('church_dropdown'))
+    if church == 0:
+        request.session['done'] = 0
+        request.session['alert'] = 1
+        request.session['message'] = "Please Select a Church"
+        return redirect('userApp:index')
     if selected_card == '0':
-        if church == 0:
-            return HttpResponseRedirect('/')
         church = getChurch(church)
         cardNumber = request.POST['Cardnum']
         holderName = request.POST['Cardholdname']
@@ -85,7 +99,10 @@ def onlineDonation(request):
         except:
             save = ''
         if not checkOnlineDonation(cardNumber, CVV, expiryDate):
-            return HttpResponseRedirect(reverse('index'))        
+            request.session['done'] = 0
+            request.session['alert'] = 1
+            request.session['message'] = "Enter Valid Card Info"
+            return redirect('userApp:index')       
         if save == 'on':
             saveCard(id, cardNumber, CVV, expiryDate)
     amount = toInt(amount)
@@ -93,16 +110,31 @@ def onlineDonation(request):
     donor = getDonor(id)
     saveReciept(donor, church, item, amount)
     saveItemDetails(church, item, amount)
-    return HttpResponseRedirect('/')
+    request.session['done'] = 0
+    request.session['alert'] = 2
+    request.session['message'] = "Donation Done"
+    return redirect('userApp:index')
 
 def inPersonDonation(request):
     id = request.COOKIES['userid']
     selected_church = int(request.POST.get('church_dropdown2'))
     selected_timeslot = request.POST.get('timeslot_dropdown')
     meeting_date = request.POST['meeting_date']
-    if not saveReservation(id, selected_church, meeting_date, selected_timeslot):
-        return HttpResponseRedirect('/')
-    return HttpResponseRedirect('/')
+    ret = saveReservation(id, selected_church, meeting_date, selected_timeslot)
+    if ret != 0:
+        request.session['done'] = 0
+        request.session['alert'] = 1
+        if ret == 1:
+            request.session['message'] = "Please Select a church"
+        if ret == 2:
+            request.session['message'] = "Plase Select Appropriate Date"
+        if ret == 3:
+            request.session['message'] = "Already Reserved"
+        return redirect('userApp:index')  
+    request.session['done'] = 0
+    request.session['alert'] = 2
+    request.session['message'] = "Reservation Done"
+    return redirect('userApp:index')
 
 def aboutPage(request):
     try:
