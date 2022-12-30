@@ -93,4 +93,6 @@ class Reservation(models.Model):
     user_id = models.ForeignKey(Donor, on_delete = models.CASCADE)
     church_id = models.ForeignKey(Church, on_delete = models.CASCADE)
 
+    class Meta:
+        ordering = ['date', 'time']
 # Create your models here.

@@ -48,7 +48,7 @@ def getCardsFiltered(id):
     return models.Card.objects.filter(user_id = id)
 
 def getPeopleInNeed(id):
-    models.PeopleInNeed.objects.get(id = id)
+    return models.PeopleInNeed.objects.get(id = id)
 
 def getAllTimeSlots(minute_difference):
     return [dt.strftime('%H:%M') for dt in 
@@ -68,6 +68,9 @@ def getChurch(church):
 def getDonor(id):
     return models.Donor.objects.get(user_id = id)
 
+def getAdmin(id):
+    return models.Admin.objects.get(user_id = id)
+
 def getItemByName(name):
     try:
         item = models.Item.objects.get(name = name)
@@ -81,6 +84,7 @@ def toInt(x):
         x = int(x)
     else:
         x = 0
+    return x
 
 def checkOnlineDonation(cardNumber, CVV, date):
     if cardNumber > '9999999999999999' or cardNumber < '1000000000000000':
@@ -141,7 +145,8 @@ def saveItemDetailsGiveout(church, item, need):
 def saveReservation(id, church, date, timeslot):
     if church == 0:
         return 1
-    if date < datetime.today().date:
+    date = datetime.strptime(date, '%Y-%m-%d').date()
+    if date < datetime.today().date():
         return 2
     reserved = models.Reservation.objects.filter(church_id = church, date = date, time = timeslot)
 
@@ -166,6 +171,9 @@ def getRole(name):
     return role
 
 def saveUser(name, email, role_name, password, church = 0):
+    saved = models.User.objects.filter(email = email)
+    if len(saved) > 0:
+        return False
     role = getRole(role_name)
     user = models.User(name = name, email = email, role = role, password = password)
     user.save()
@@ -180,7 +188,7 @@ def saveUser(name, email, role_name, password, church = 0):
 
 def changeSaveNeed(church, item, person, quantity, date, period):
     try:
-        need = models.Need.objects.filter(church_id = church).get(item_id = item.item_id, people_in_need_id = person.id)
+        need = models.Need.objects.filter(church_id = church).get(item_id = item, people_in_need_id = person)
         need.quantity += quantity
     except:
         need = models.Need(church_id = church, item_id = item, people_in_need_id = person, quantity = quantity, due_date = date, period = period)
@@ -188,3 +196,18 @@ def changeSaveNeed(church, item, person, quantity, date, period):
     
 def getAllEmailsFiltered(email):
     return models.User.objects.filter(email = email)
+
+def getAllReservationsFiltered(church):
+    return models.Reservation.objects.filter(church_id = church)
+
+def clearAlert(request):
+    if request.session['done'] == 0:
+        request.session['done'] = 1
+    else:
+        request.session['alert'] = 0
+        request.session['message'] = ""
+
+def makeAlert(request, alert, message):
+    request.session['done'] = 0
+    request.session['alert'] = alert
+    request.session['message'] = message

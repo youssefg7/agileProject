@@ -16,7 +16,7 @@
             {% comment %} <a href="/login/donorSignup/">
                 <button class="btn btn-outline-light">Sign Up</button>
             </a> {% endcomment %}
-            <a href="/login/donorMyaccount/">
+            <a href={% url 'userApp:myAccount' %}>
                 <button class="btn btn-outline-light">My account</button>
             </a>
             {% comment %} <a href="/login">

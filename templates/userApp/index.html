@@ -40,34 +40,38 @@
     <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col">First</th>
-        <th scope="col">Last</th>
-        <th scope="col">Handle</th>
-        <th scope="col">Handle</th>
-      </tr>
-    </thead>
-    <tbody>
-        {% for i, need in needs%}
-            {% if today > need.due_date %}
+        <th scope="col">Person in Need</th>
+        <th scope="col">Item</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Due Date</th>
+    </tr>
+</thead>
+<tbody>
+        {% if sz1 == 0 %}
+            <td colspan="5" style='text-align: center'>No people in need to be shown</td>
+        {% else %}
+            {% for i, need in needs%}
+                {% if today > need.due_date %}
 
-            <tr class="p-3 mb-2 bg-danger text-white">
+                <tr class="p-3 mb-2 bg-danger text-white">
 
-            {% elif today == need.due_date %}
+                {% elif today == need.due_date %}
 
-            <tr class="p-3 mb-2 bg-warning text-dark">
+                <tr class="p-3 mb-2 bg-warning text-dark">
 
-            {% else %}
+                {% else %}
 
-            <tr>
+                <tr>
 
-            {% endif %}
-            <th scope="row">{{i}}</th>
-            <td>{{need.people_in_need_id.name}}</td>
-            <td>{{need.item_id.name}}</td>
-            <td>{{need.quantity}}</td>
-            <td>{{need.due_date}}</td>
-        </tr>
-        {%endfor%}
+                {% endif %}
+                <th scope="row">{{i}}</th>
+                <td>{{need.people_in_need_id.name}}</td>
+                <td>{{need.item_id.name}}</td>
+                <td>{{need.quantity}}</td>
+                <td>{{need.due_date}}</td>
+            </tr>
+            {%endfor%}
+        {% endif %}
     </tbody>
 </table>
 
@@ -84,25 +88,60 @@
     <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col">First</th>
-        <th scope="col"></th>
-        <th scope="col">Handle</th>
-        <th scope="col">Handle</th>
+        <th scope="col">Church</th>
+        <th scope="col">Item</th>
+        <th scope="col">Quantity</th>
       </tr>
     </thead>
     <tbody>
-        {% for i, item in items %}
-      <tr>
-        <th scope="row">{{i}}</th>
-        <td colspan="2">{{church.name}}</td>
-        <td>{{item.item_id.name}}</td>
-        <td>{{item.quantity}}</td>
-      </tr>
-      {% endfor %}
+        {% if sz2 == 0 %}
+            <td colspan="5" style='text-align: center'>No people in need to be shown</td>
+        {% else %}
+            {% for i, item in items %}
+        <tr>
+            <th scope="row">{{i}}</th>
+            <td >{{church.name}}</td>
+            <td>{{item.item_id.name}}</td>
+            <td>{{item.quantity}}</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
     </tbody>
 </table>
 
 <a href="{% url 'userApp:adminInvPage' %}">
+    <button type="button" class="btn btn-primary position-absolute end-0" >View More Details</button>
+</a>
+
+<p>Today Reservations:</p>
+
+<table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Donor Name</th>
+        <th scope="col">Date</th>
+        <th scope="col">Time</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% if sz3 == 0 %}
+            <td colspan="5" style='text-align: center'>No people in need to be shown</td>
+        {% else %}
+            {% for i, reservation in reservations %}
+        <tr>
+            <th scope="row">{{i}}</th>
+            <td>{{reservation.user_id.user_id.name}}</td>
+            <td>{{reservation.date}}</td>
+            <td>{{reservation.time}}</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </tbody>
+</table>
+
+
+<a href="{% url 'userApp:adminReservation' %}">
     <button type="button" class="btn btn-primary position-absolute end-0" >View More Details</button>
     </a>
 

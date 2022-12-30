@@ -6,6 +6,7 @@ from dbApp import models
 from Util import *
 
 def adminInvPage(request):
+    clearAlert(request)
     try:
         id = getId(request)
         user = getUser(id)
@@ -13,12 +14,13 @@ def adminInvPage(request):
         all_items = getItemDetailsFiltered(church)
         l = len(all_items)
         items = zip(list(range(1, l+1)), all_items)
-        dict = {'user':user, 'church': church, 'items': items}
+        dict = {'user':user, 'church': church, 'items': items, 'sz': l}
     except:
         dict = {'role' : "Anon", 'name': "", 'rolenum': -1}
     return render(request, "userApp/admininv.html",dict)
 
 def adminPeopleINPage(request):
+    clearAlert(request)
     try:
         id = getId(request)
         user = getUser(id)
@@ -26,18 +28,30 @@ def adminPeopleINPage(request):
         all_needs = getNeedsFiltered(church)
         l = len(all_needs)
         needs = zip(list(range(1, l+1)), all_needs)
-        today = datetime.today().date
-        dict = {'user':user, 'church': church, 'needs': needs, 'today':today }
+        today = datetime.today().date()
+        dict = {'user':user, 'church': church, 'needs': needs, 'today':today, 'sz': l}
     except:
         dict = {'role' : "Anon", 'name': "", 'rolenum': -1}
     return render(request, "userApp/adminPeopleIN.html",dict)
 
+def adminReservation(request):
+    clearAlert(request)
+    try:
+        id = getId(request)
+        user = getUser(id)
+        church = getAdminChurch(id)
+        all_reservations = getAllReservationsFiltered(church)
+        l = len(all_reservations)
+        reservations = zip(list(range(1, l+1)), all_reservations)
+        today = datetime.today().date()
+        print(l)
+        dict = {'user':user, 'church': church, 'reservations': reservations, 'today':today, 'sz': l}
+    except:
+        dict = {'role' : "Anon", 'name': "", 'rolenum': -1}
+    return render(request, "userApp/adminreservation.html",dict)
+
 def index(request):
-    if request.session['done'] == 0:
-        request.session['done'] = 1
-    else:
-        request.session['alert'] = 0
-        request.session['message'] = ""
+    clearAlert(request)
     try:
         id = getId(request)
         user = getUser(id)
@@ -48,12 +62,14 @@ def index(request):
             dict = {'user':user, 'churches': churches, 'cards': cards, 'timeslots': ts}
         elif user.role.role_number == 1:
             church = getAdminChurch(id)
+            today = datetime.today().date()
             all_items = getItemDetailsFiltered(church)
             all_needs = getNeedsFiltered(church)
+            all_reservations = getAllReservationsFiltered(church)
             items = zip(list(range(1, min(5, len(all_items)) + 1)), all_items)
             needs = zip(list(range(1, min(5, len(all_needs)) + 1)), all_needs)
-            today = datetime.today().date
-            dict = {'user':user, 'church': church, 'items': items,'needs': needs, 'today': today}
+            reservations = zip(list(range(1, min(5, len(all_reservations)) + 1)), all_reservations)
+            dict = {'user':user, 'church': church, 'items': items,'needs': needs, 'reservations': reservations, 'today': today, 'sz1': len(all_needs), 'sz2': len(all_items), 'sz3': len(all_items)}
         else:
             raise KeyError()
     except:
@@ -67,14 +83,10 @@ def Giveout(request):
     item = need.item_id
     
     if not saveItemDetailsGiveout(church, item, need):
-        request.session['done'] = 0
-        request.session['alert'] = 1
-        request.session['message'] = "Can't Giveout This Item"
-        return redirect('userApp:index')
+        makeAlert(request, 1, "Can't Giveout This Item")
+        return redirect('userApp:adminPeopleIN')
     needDueDateAlter(need)
-    request.session['done'] = 0
-    request.session['alert'] = 2
-    request.session['message'] = "Giveout Done"
+    makeAlert(request, 2, "Giveout Done")
     return redirect('userApp:index')
 
 def onlineDonation(request):
@@ -83,9 +95,7 @@ def onlineDonation(request):
     selected_card = request.POST.get('card_dropdown')
     church = int(request.POST.get('church_dropdown'))
     if church == 0:
-        request.session['done'] = 0
-        request.session['alert'] = 1
-        request.session['message'] = "Please Select a Church"
+        makeAlert(request, 1, "Please Select a Church")
         return redirect('userApp:index')
     if selected_card == '0':
         church = getChurch(church)
@@ -99,9 +109,7 @@ def onlineDonation(request):
         except:
             save = ''
         if not checkOnlineDonation(cardNumber, CVV, expiryDate):
-            request.session['done'] = 0
-            request.session['alert'] = 1
-            request.session['message'] = "Enter Valid Card Info"
+            makeAlert(request, 1, "Enter Valid Card Info")
             return redirect('userApp:index')       
         if save == 'on':
             saveCard(id, cardNumber, CVV, expiryDate)
@@ -110,9 +118,7 @@ def onlineDonation(request):
     donor = getDonor(id)
     saveReciept(donor, church, item, amount)
     saveItemDetails(church, item, amount)
-    request.session['done'] = 0
-    request.session['alert'] = 2
-    request.session['message'] = "Donation Done"
+    makeAlert(request, 2, "Donation Done")
     return redirect('userApp:index')
 
 def inPersonDonation(request):
@@ -122,19 +128,134 @@ def inPersonDonation(request):
     meeting_date = request.POST['meeting_date']
     ret = saveReservation(id, selected_church, meeting_date, selected_timeslot)
     if ret != 0:
-        request.session['done'] = 0
-        request.session['alert'] = 1
         if ret == 1:
-            request.session['message'] = "Please Select a church"
+            makeAlert(request, 1, "Please Select a church")
         if ret == 2:
-            request.session['message'] = "Plase Select Appropriate Date"
+            makeAlert(request, 1, "Plase Select Appropriate Date")
         if ret == 3:
-            request.session['message'] = "Already Reserved"
-        return redirect('userApp:index')  
-    request.session['done'] = 0
-    request.session['alert'] = 2
-    request.session['message'] = "Reservation Done"
+            makeAlert(request, 1, "Already Reserved")
+        return redirect('userApp:index')
+    makeAlert(request, 2, "Reservation Done")  
     return redirect('userApp:index')
+
+def myAccount(request):
+    clearAlert(request)
+    id = getId(request)
+    user = getUser(id)
+    if user.role.role_number == 1:
+        church = getAdminChurch(id)
+        churches = getAllChurchesExcept(church.church_id)
+        items = getAllItems()
+        people = getAllPeopleInNeed()
+        donors = getAllDonors()
+        dict = {'user':user, 'church': church, 'churches':churches, 'items':items, 'people':people, 'donors': donors}
+    elif user.role.role_number == 2:
+        dict = {'user':user}
+    return render(request, "userApp/Myaccount.html", dict)
+
+def myAccountSubmit(request):
+    id = getId(request)
+    user = getUser(id)
+    name = request.POST['Name']
+    password = request.POST['Password']
+    if name != '':
+        user.name = name
+    if password != '':
+        user.password = password
+    user.save()
+    if user.role.role_number == 1:
+        admin = getAdmin(user)
+        church = request.POST.get('church_dropdown')
+        if church != '0':
+            admin.church_id = getChurch(church)
+        admin.save()
+    return HttpResponseRedirect('/')
+
+def addAdminSubmit(request):
+    id = getId(request)
+    email = request.POST['Email']
+    emails = getAllEmailsFiltered(email)
+    if len(emails) > 0:
+        makeAlert(request, 1, 'Email is registered before')
+        return redirect('userApp:myAccount')
+    name = request.POST['Name']
+    church = getAdminChurch(id)
+    saveUser(name, email, 'Admin', 'Admin', church)
+    return HttpResponseRedirect('/')
+
+def addpeopleinneedSubmit(request):
+    id = getId(request)
+    person = request.POST.get('people_dropdown')
+    item = request.POST['item_datalist1']
+    quantity = request.POST['Quantity1']
+    period = request.POST['Period']
+    date = request.POST['due_date']
+    church = getAdminChurch(id)
+    if person == '-1':
+        name = request.POST['person_name']
+        ID = request.POST['person_ID']
+        if name == '':
+            makeAlert(request, 1, 'Specify Person in Need Name')
+            return redirect('userApp:myAccount')
+        if ID == '':
+            makeAlert(request, 1, 'Specify Person in Need National ID')
+            return redirect('userApp:myAccount')
+        person = models.PeopleInNeed(id = ID, name = name)
+        person.save()
+    elif person == '0':
+        makeAlert(request, 1, 'Please Choose a Person in Need or Add New One')
+        return redirect('userApp:myAccount')
+    else:
+        person = getPeopleInNeed(person)
+    if date == '':
+        makeAlert(request, 1, 'Specify a Date')
+        return redirect('userApp:myAccount')
+    if item == '':
+        makeAlert(request, 1, 'Specify an Item')
+        return redirect('userApp:myAccount')
+    if quantity == '':
+        makeAlert(request, 1, 'Specify a Quantity')
+        return redirect('userApp:myAccount')
+    if period == '':
+        makeAlert(request, 1, 'Specify a Period')
+        return redirect('userApp:myAccount')
+    date = datetime.strptime(date, '%Y-%m-%d').date()
+    item = getItemByName(item)
+    changeSaveNeed(church, item, person, quantity, date, period)
+    return HttpResponseRedirect('/')
+
+def inventorySubmit(request):
+    id = getId(request)
+    donor = request.POST.get('donor_dropdown')
+    item = request.POST['item_datalist2']
+    quantity = request.POST['Quantity2']
+    church = getAdminChurch(id)
+    if donor == '-1':
+        name = request.POST['donor_name']
+        email = request.POST['donor_email']
+        if name == '':
+            makeAlert(request, 1, 'Specify Donor Name')
+            return redirect('userApp:myAccount')
+        if email == '':
+            makeAlert(request, 1, 'Specify Donor Email')
+            return redirect('userApp:myAccount')
+        donor = saveUser(name, email, 'Donor', 'Donor')
+    elif donor == '0':
+        makeAlert(request, 1, 'Please Choose a Donor or Add New One')
+        return redirect('userApp:myAccount')
+    else:
+        donor = getDonor(donor)
+    if item == '':
+        makeAlert(request, 1, 'Specify an Item')
+        return redirect('userApp:myAccount')
+    if quantity == '':
+        makeAlert(request, 1, 'Specify a Quantity')
+        return redirect('userApp:myAccount')
+    quantity = toInt(quantity)
+    item = getItemByName(item)
+    saveReciept(donor, church, item, quantity)
+    saveItemDetails(church, item, quantity)
+    return HttpResponseRedirect('')
 
 def aboutPage(request):
     try:

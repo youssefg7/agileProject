@@ -9,8 +9,26 @@
 
 {% block content %}
 
+{% if request.session.alert == 1 %}
 <br>
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{request.session.message}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+</div>
 
+{% elif request.session.alert == 2 %}
+<br>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{request.session.message}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+</div>
+{% endif %}
+
+<br>
 
 {% if  user.role.role_number == 1 %} {% comment %} Admin {% endcomment %}
 <table id="example" class="table table-hover" style="width:100%">
@@ -25,37 +43,41 @@
         </tr>
     </thead>
     <tbody>
-        {% for i, need in needs%}
-        {% if today > need.due_date %}
+        {% if sz == 0 %}
+            <td colspan="5" style='text-align: center'>No people in need to be shown</td>
+        {% else %}
+            {% for i, need in needs%}
+            {% if today > need.due_date %}
 
-            <tr class="p-3 mb-2 bg-danger text-white">
+                <tr class="p-3 mb-2 bg-danger text-white">
 
-            {% elif today == need.due_date %}
+                {% elif today == need.due_date %}
 
-            <tr class="p-3 mb-2 bg-warning text-dark">
+                <tr class="p-3 mb-2 bg-warning text-dark">
 
-            {% else %}
+                {% else %}
 
-            <tr>
+                <tr>
 
+                {% endif %}
+                <th scope="row">{{i}}</th>
+                <td>{{need.people_in_need_id.name}}</td>
+                <td>{{need.item_id.name}}</td>
+                <td>{{need.quantity}}</td>
+                <td>{{need.due_date}}</td>
+                {% comment %} <td><input type="submit" class="btn btn-block btn-info" value={{need.id}} />Give out</td> {% endcomment %}
+                <td> 
+                    <div>
+                        <form action="{% url 'userApp:Giveout' %}" method="post">
+                        {% csrf_token %}
+                        <input name="Giveout" class="d-none" value='{{need.id}}' >
+                        <input class="btn btn-block btn-info" type="submit" value="Give out">
+                        </form>
+                    </div>
+                    
+            </tr>
+            {%endfor%}
             {% endif %}
-            <th scope="row">{{i}}</th>
-            <td>{{need.people_in_need_id.name}}</td>
-            <td>{{need.item_id.name}}</td>
-            <td>{{need.quantity}}</td>
-            <td>{{need.due_date}}</td>
-            {% comment %} <td><input type="submit" class="btn btn-block btn-info" value={{need.id}} />Give out</td> {% endcomment %}
-            <td> 
-                 <div>
-                    <form action="{% url 'userApp:Giveout' %}" method="post">
-                    {% csrf_token %}
-                    <input name="Giveout" class="d-none" value='{{need.id}}' >
-                    <input class="btn btn-block btn-info" type="submit" value="Give out">
-                    </form>
-                </div>
-                
-        </tr>
-        {%endfor%}
     </tbody>
     <tfoot>
         <tr>

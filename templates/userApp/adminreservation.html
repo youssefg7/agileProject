@@ -27,38 +27,54 @@
       </button>
 </div>
 {% endif %}
+
 <br>
 {% if  user.role.role_number == 1 %} {% comment %} Admin {% endcomment %}
-<table id="example" class="table table-striped" style="width:100%">
+<table id="example" class="table table-hover" style="width:100%">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Position</th>
-            <th>Office</th>
-            <th>Age</th>
+          <th scope="col">#</th>
+          <th scope="col">Donor Name</th>
+          <th scope="col">Date</th>
+          <th scope="col">Time</th>
         </tr>
-    </thead>
+      </thead>
     <tbody>
         {% if sz == 0 %}
             <td colspan="5" style='text-align: center'>No people in need to be shown</td>
         {% else %}
-            {% for i, item in items  %}
-            <tr>
+            {% for i, reservation in reservations %}
+            {% if today > reservation.date %}
+
+                <tr class="p-3 mb-2 bg-danger text-white">
+
+                {% elif today == reservation.date %}
+
+                <tr class="p-3 mb-2 bg-warning text-dark">
+
+                {% else %}
+
+                <tr>
+
+                {% endif %}
                 <th scope="row">{{i}}</th>
-                <td>{{church.name}}</td>
-                <td>{{item.item_id.name}}</td>
-                <td>{{item.quantity}}</td>
+                <td>{{reservation.user_id.user_id.name}}</td>
+                <td>{{reservation.date}}</td>
+                <td>{{reservation.time}}</td>
+                {% comment %} <td><input type="submit" class="btn btn-block btn-info" value={{need.id}} />Give out</td> {% endcomment %} 
+                    
+                    
             </tr>
             {%endfor%}
-        {% endif %}
+            {% endif %}
     </tbody>
     <tfoot>
         <tr>
-            <th>Name</th>
-            <th>Position</th>
-            <th>Office</th>
-            <th>Age</th>
-        </tr>
+            <th scope="col">#</th>
+            <th scope="col">Donor Name</th>
+            <th scope="col">Date</th>
+            <th scope="col">Time</th>
+          </tr>
     </tfoot>
 </table>
 
