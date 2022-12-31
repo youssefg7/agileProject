@@ -9,6 +9,7 @@ from Util import *
 def adminInvPage(request):
     clearAlert(request)
     try:
+        # Get stored data needed for inventory dashborad
         id = getId(request)
         user = getUser(id)
         church = getAdminChurch(id)
@@ -24,6 +25,7 @@ def adminInvPage(request):
 def adminPeopleINPage(request):
     clearAlert(request)
     try:
+        # Get stored data needed for people in need dashborad
         id = getId(request)
         user = getUser(id)
         church = getAdminChurch(id)
@@ -40,6 +42,7 @@ def adminPeopleINPage(request):
 def adminReservation(request):
     clearAlert(request)
     try:
+        # Get stored data needed for reservation dashborad
         id = getId(request)
         user = getUser(id)
         church = getAdminChurch(id)
@@ -82,6 +85,7 @@ def index(request):
         dict = {'role' : "Anon", 'name': "", 'rolenum': -1}
     return render(request, "userApp/index.html", dict) 
 
+# Action taken when giveout button is clicked in people in need dashboard
 def Giveout(request):
     selected_need = request.POST.get('Giveout')
     need = models.Need.objects.get(id = selected_need)
@@ -94,15 +98,19 @@ def Giveout(request):
     makeAlert(request, 2, "Giveout Done")
     return redirect('userApp:index')
 
+# Donor online cash donation
 def onlineDonation(request):
     id = getId(request)
     amount = request.POST['Amount']
     selected_card = request.POST.get('card_dropdown')
     church = int(request.POST.get('church_dropdown'))
+    # Error not selecting a church
     if church == 0:
         makeAlert(request, 1, "Please Select a Church")
         return redirect('userApp:index')
+    # Use new card
     if selected_card == '0':
+        # Get data from view
         church = getChurch(church)
         cardNumber = request.POST['Cardnum']
         holderName = request.POST['Cardholdname']
@@ -113,35 +121,53 @@ def onlineDonation(request):
             save = request.POST['saveCard']
         except:
             save = ''
+        # Chech credentials
         if not checkOnlineDonation(cardNumber, CVV, expiryDate):
+            # Credentials Error
             makeAlert(request, 1, "Enter Valid Card Info")
-            return redirect('userApp:index')       
+            return redirect('userApp:index')
+        # Save card
         if save == 'on':
             saveCard(id, cardNumber, CVV, expiryDate)
+    # Prepare data to be stored
     amount = toInt(amount)
     item = getItemByName('Cash')
     donor = getDonor(id)
+    # Store data in database
     saveReciept(donor, church, item, amount)
     saveItemDetails(church, item, amount)
     makeAlert(request, 2, "Donation Done")
     return redirect('userApp:index')
 
+# Reserve in-person meeting for donation
 def inPersonDonation(request):
     id = request.COOKIES['userid']
+    # Get data from view
     selected_church = int(request.POST.get('church_dropdown2'))
     selected_timeslot = request.POST.get('timeslot_dropdown')
     meeting_date = request.POST['meeting_date']
+    # No timeslot seleceted
+    if selected_timeslot == '0':
+        makeAlert(request, 1, 'Please select a timeslot')
+        return redirect('userApp:index')
+    # Try to save reservation
     ret = saveReservation(id, selected_church, meeting_date, selected_timeslot)
+    # Reservation Error
     if ret != 0:
+        # No church selected error
         if ret == 1:
             makeAlert(request, 1, "Please Select a church")
+        # No date selected error
         if ret == 2:
             makeAlert(request, 1, "Plase Select Appropriate Date")
+        # Already reserved date and time for the church error
         if ret == 3:
             makeAlert(request, 1, "Already Reserved")
         return redirect('userApp:index')
+    # Reservation completed
     makeAlert(request, 2, "Reservation Done")  
     return redirect('userApp:index')
+
 
 def myAccount(request):
     clearAlert(request)

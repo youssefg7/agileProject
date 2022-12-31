@@ -275,7 +275,7 @@
                         <label for="colFormLabel" class="col-form-label">Time Slot:</label>
                         <div class="col-sm-10">
                             <select name="timeslot_dropdown" class="form-control" id="fav_church">
-                                <option value="" selected="selected">Please select a time slot</option>
+                                <option value="0" selected="selected">Please select a time slot</option>
                                 {% for x in timeslots %}
                                 <option value="{{x}}" name='item_dropdown_church'>{{x}}</option>
                                 {% endfor%}
