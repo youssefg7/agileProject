@@ -2,7 +2,7 @@
 
 {% block navbar %} 
 
-{% include 'navbar.html' with prole=user.role.role_number %}
+{% include 'navbar.html' with prole=user.role.role_name %}
 
 {% endblock navbar %}
 
@@ -30,27 +30,28 @@
 
 <br>
 
-{% if  user.role.role_number == 1 %} {% comment %} Admin {% endcomment %}
+{% if  user.role.role_name == 'Admin' %} {% comment %} Admin {% endcomment %}
 <table id="example" class="table table-hover" style="width:100%">
     <thead>
         <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Position</th>
-            <th scope="col">Office</th>
-            <th scope="col">Age</th>
-            <th scope="col">Start date</th>
-            <th scope="col">Salary</th>
+            <th scope="col" style="width: 10%">#</th>
+            <th scope="col" style="width: 18%">Person in Need</th>
+            <th scope="col" style="width: 18%">Item</th>
+            <th scope="col" style="width: 18%">Quantity</th>
+            <th scope="col" style="width: 18%">Due Date</th>
+            <th scope="col" style="width: 18%">Giveout</th>
         </tr>
     </thead>
     <tbody>
         {% if sz == 0 %}
+        <tr>
             <td colspan="6" style='text-align: center'>No people in need to be shown</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-
+            <td hidden></td>
+            <td hidden></td>
+            <td hidden></td>
+            <td hidden></td>
+            <td hidden></td>
+        </tr>
         {% else %}
             {% for i, need in needs%}
             {% if today > need.due_date %}
@@ -87,12 +88,12 @@
     </tbody>
     <tfoot>
         <tr>
-            <th>Name</th>
-            <th>Position</th>
-            <th>Office</th>
-            <th>Age</th>
-            <th>Start date</th>
-            <th>Salary</th>
+            <th scope="col" style="width: 10%">#</th>
+            <th scope="col" style="width: 20%">Person in Need</th>
+            <th scope="col" style="width: 16%">Item</th>
+            <th scope="col" style="width: 16%">Quantity</th>
+            <th scope="col" style="width: 20%">Due Date</th>
+            <th scope="col" style="width: 18%">Giveout</th>
         </tr>
     </tfoot>
 </table>

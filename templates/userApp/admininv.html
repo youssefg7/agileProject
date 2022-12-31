@@ -2,12 +2,13 @@
 
 {% block navbar %} 
 
-{% include 'navbar.html' with prole=user.role.role_number %}
+{% include 'navbar.html' with prole=user.role.role_name %}
 
 {% endblock navbar %}
 
 
 {% block content %}
+
 
 {% if request.session.alert == 1 %}
 <br>
@@ -28,22 +29,24 @@
 </div>
 {% endif %}
 <br>
-{% if  user.role.role_number == 1 %} {% comment %} Admin {% endcomment %}
+{% if  user.role.role_name == 'Admin' %} {% comment %} Admin {% endcomment %}
 <table id="example" class="table table-striped" style="width:100%">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Position</th>
-            <th>Office</th>
-            <th>Age</th>
+            <th scope="col" style="width: 15%">#</th>
+            <th scope="col" style="width: 35%">Church</th>
+            <th scope="col" style="width: 25%">Item</th>
+            <th scope="col" style="width: 25%">Quantity</th>
         </tr>
     </thead>
     <tbody>
         {% if sz == 0 %}
-            <td colspan="4" style='text-align: center'>No people in need to be shown</td>
-            <td></td>
-            <td></td>
-            <td></td>
+        <tr>
+            <td colspan="4" style='text-align: center'>No items in inventory to be shown</td>
+            <td hidden></td>
+            <td hidden></td>
+            <td hidden></td>
+        </tr>
         {% else %}
             {% for i, item in items  %}
             <tr>
@@ -57,15 +60,14 @@
     </tbody>
     <tfoot>
         <tr>
-            <th>Name</th>
-            <th>Position</th>
-            <th>Office</th>
-            <th>Age</th>
+            <th scope="col" style="width: 15%">#</th>
+            <th scope="col" style="width: 35%">Church</th>
+            <th scope="col" style="width: 25%">Item</th>
+            <th scope="col" style="width: 25%">Quantity</th>
         </tr>
     </tfoot>
 </table>
 
 {% endif %}
-
 
 {% endblock content %}

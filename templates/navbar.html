@@ -1,22 +1,19 @@
 {% extends 'base.html' %}
 {% block navbar %}
 
-{% if prole == 1 %}
+{% if prole == 'Admin' %}
 
 
 {% include 'navbaradmin.html' %}
 
-{% elif prole == 2 %}
+{% elif prole == 'Donor' %}
 
 {% include 'navbardonor.html' %}
 
 {% else %}
 
-
 {% include 'navbarlogin.html' %}
-{% comment %} <div style="margin-left: 0.9%; margin-right: 0.9%">
-    
-</div> {% endcomment %}
+
 
 {% endif %}
 

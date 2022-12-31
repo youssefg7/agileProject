@@ -5,6 +5,7 @@ from django.urls import reverse
 from dbApp import models
 from Util import *
 
+# Render the inventory page
 def adminInvPage(request):
     clearAlert(request)
     try:
@@ -16,8 +17,9 @@ def adminInvPage(request):
         items = zip(list(range(1, l+1)), all_items)
         dict = {'user':user, 'church': church, 'items': items, 'sz': l}
     except:
-        dict = {'role' : "Anon", 'name': "", 'rolenum': -1}
+        return redirect('userApp:index')
     return render(request, "userApp/admininv.html",dict)
+
 
 def adminPeopleINPage(request):
     clearAlert(request)
@@ -31,7 +33,7 @@ def adminPeopleINPage(request):
         today = datetime.today().date()
         dict = {'user':user, 'church': church, 'needs': needs, 'today':today, 'sz': l}
     except:
-        dict = {'role' : "Anon", 'name': "", 'rolenum': -1}
+        return redirect('userApp:index')
     return render(request, "userApp/adminPeopleIN.html",dict)
 
 def adminReservation(request):
@@ -47,7 +49,7 @@ def adminReservation(request):
         print(l)
         dict = {'user':user, 'church': church, 'reservations': reservations, 'today':today, 'sz': l}
     except:
-        dict = {'role' : "Anon", 'name': "", 'rolenum': -1}
+        return redirect('userApp:index')
     return render(request, "userApp/adminreservation.html",dict)
 
 def index(request):
@@ -69,7 +71,7 @@ def index(request):
             items = zip(list(range(1, min(5, len(all_items)) + 1)), all_items)
             needs = zip(list(range(1, min(5, len(all_needs)) + 1)), all_needs)
             reservations = zip(list(range(1, min(5, len(all_reservations)) + 1)), all_reservations)
-            dict = {'user':user, 'church': church, 'items': items,'needs': needs, 'reservations': reservations, 'today': today, 'sz1': len(all_needs), 'sz2': len(all_items), 'sz3': len(all_items)}
+            dict = {'user':user, 'church': church, 'items': items,'needs': needs, 'reservations': reservations, 'today': today, 'sz1': len(all_needs), 'sz2': len(all_items), 'sz3': len(all_reservations)}
         else:
             raise KeyError()
     except:
@@ -81,7 +83,6 @@ def Giveout(request):
     need = models.Need.objects.get(id = selected_need)
     church = need.church_id
     item = need.item_id
-    
     if not saveItemDetailsGiveout(church, item, need):
         makeAlert(request, 1, "Can't Giveout This Item")
         return redirect('userApp:adminPeopleIN')

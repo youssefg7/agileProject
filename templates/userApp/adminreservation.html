@@ -2,7 +2,7 @@
 
 {% block navbar %} 
 
-{% include 'navbar.html' with prole=user.role.role_number %}
+{% include 'navbar.html' with prole=user.role.role_name %}
 
 {% endblock navbar %}
 
@@ -29,22 +29,24 @@
 {% endif %}
 
 <br>
-{% if  user.role.role_number == 1 %} {% comment %} Admin {% endcomment %}
+{% if  user.role.role_name == 'Admin' %} {% comment %} Admin {% endcomment %}
 <table id="example" class="table table-hover" style="width:100%">
     <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">Donor Name</th>
-          <th scope="col">Date</th>
-          <th scope="col">Time</th>
+            <th scope="col" style="width: 15%">#</th>
+            <th scope="col" style="width: 35%">Donor Name</th>
+            <th scope="col" style="width: 25%">Date</th>
+            <th scope="col" style="width: 25%">Time</th>
         </tr>
       </thead>
     <tbody>
         {% if sz == 0 %}
-            <td colspan="4" style='text-align: center'>No people in need to be shown</td>
-            <td></td>
-            <td></td>
-            <td></td>
+        <tr>
+            <td colspan="4" style='text-align: center'>No reservations to be shown</td>
+            <td hidden></td>
+            <td hidden></td>
+            <td hidden></td>
+        </tr>
         {% else %}
             {% for i, reservation in reservations %}
             {% if today > reservation.date %}
@@ -73,10 +75,10 @@
     </tbody>
     <tfoot>
         <tr>
-            <th scope="col">#</th>
-            <th scope="col">Donor Name</th>
-            <th scope="col">Date</th>
-            <th scope="col">Time</th>
+            <th scope="col" style="width: 15%">#</th>
+            <th scope="col" style="width: 35%">Donor Name</th>
+            <th scope="col" style="width: 25%">Date</th>
+            <th scope="col" style="width: 25%">Time</th>
           </tr>
     </tfoot>
 </table>

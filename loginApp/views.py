@@ -18,9 +18,7 @@ def donorLoginSubmit(request):
     fpassword = request.POST['Password']
     fquery = models.User.objects.filter(email=femail)
     if fquery.all().count() == 0:
-        request.session['done'] = 0
-        request.session['alert'] = 1
-        request.session['message'] = "Wrong Email"
+        makeAlert(request, 1, "Wrong Email")
         return redirect('donorLoginPage')
     else:
         if fquery.all().values()[0]["password"] == fpassword:
@@ -28,14 +26,10 @@ def donorLoginSubmit(request):
                 max_age = 365 * 24 * 60 * 60
                 expires = datetime.strftime(datetime.utcnow() + timedelta(seconds=max_age),"%a, %d-%b-%Y %H:%M:%S GMT",)
                 response.set_cookie("userid", fquery.all().values()[0]["user_id"], max_age=max_age,expires=expires,)
-                request.session['done'] = 0
-                request.session['alert'] = 2
-                request.session['message'] = "Logged in"
+                makeAlert(request, 2, "Logged in")
                 return response
         else:
-            request.session['done'] = 0
-            request.session['alert'] = 1
-            request.session['message'] = "Wrong Password"
+            makeAlert(request, 1, "Wrong Password")
             return redirect('donorLoginPage')
 
 def donorSignupPage(request):
@@ -49,9 +43,7 @@ def donorSignupSubmit(request):
     password = request.POST['Password']
     donor = saveUser(name, email, 'Donor', password)
     if donor == False:
-        request.session['done'] = 0
-        request.session['alert'] = 1
-        request.session['message'] = "Email is Registered Before"
+        makeAlert(request, 1, "Email is Registered Before")
         return redirect('donorSignup')
     selected_churches = request.POST.getlist("item_checkbox")
     churches = []
@@ -60,9 +52,7 @@ def donorSignupSubmit(request):
     donor.fav_church.set(churches)
     print(churches)
     donor.save()
-    request.session['done'] = 0
-    request.session['alert'] = 2
-    request.session['message'] = "Signup Done"
+    makeAlert(request, 2, "Signup Done")
     return redirect('donorLoginPage')
 
 def donorLogout(request):

@@ -2,7 +2,7 @@
 
 {% block navbar %} 
 
-{% include 'navbar.html' with prole=user.role.role_number %}
+{% include 'navbar.html' with prole=user.role.role_name %}
 
 {% endblock navbar %}
 
@@ -28,7 +28,7 @@
 {% endif %}
 
 
-{% if user.role.role_number == 1 %} {% comment %} Admin {% endcomment %}
+{% if user.role.role_name == 'Admin' %} {% comment %} Admin {% endcomment %}
 
 <br>
 <h2 class="text-center">Hello {{user.name}}!</h2>
@@ -41,9 +41,9 @@
       <tr>
         <th scope="col" style="width: 15%">#</th>
         <th scope="col" style="width: 25%">Person in Need</th>
-        <th scope="col" style="width: 25%">Item</th>
-        <th scope="col" style="width: 10%">Quantity</th>
-        <th scope="col" style="width: 25%">Due Date</th>
+        <th scope="col" style="width: 20%">Item</th>
+        <th scope="col" style="width: 18%">Quantity</th>
+        <th scope="col" style="width: 22%">Due Date</th>
     </tr>
 </thead>
 <tbody>
@@ -95,7 +95,7 @@
     </thead>
     <tbody>
         {% if sz2 == 0 %}
-            <td colspan="5" style='text-align: center'>No people in need to be shown</td>
+            <td colspan="5" style='text-align: center'>No items in inventory to be shown</td>
         {% else %}
             {% for i, item in items %}
         <tr>
@@ -129,7 +129,7 @@
     </thead>
     <tbody>
         {% if sz3 == 0 %}
-            <td colspan="5" style='text-align: center'>No people in need to be shown</td>
+            <td colspan="5" style='text-align: center'>No reservations to be shown</td>
         {% else %}
             {% for i, reservation in reservations %}
         <tr>
@@ -144,11 +144,16 @@
 </table>
 
 
+
 <a href="{% url 'userApp:adminReservation' %}">
     <button type="button" class="btn btn-primary position-absolute end-0" >View More Details</button>
     </a>
 
-{% elif user.role.role_number == 2 %} {% comment %} Donor {% endcomment %}
+<br>
+<br>
+
+
+{% elif user.role.role_name == 'Donor' %} {% comment %} Donor {% endcomment %}
 
 <br>
 <h2 class="text-center">Hello {{user.name}}!</h2>
