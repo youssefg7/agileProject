@@ -201,11 +201,14 @@ def getAllReservationsFiltered(church):
     return models.Reservation.objects.filter(church_id = church)
 
 def clearAlert(request):
-    if request.session['done'] == 0:
-        request.session['done'] = 1
-    else:
-        request.session['alert'] = 0
-        request.session['message'] = ""
+    try:
+        if request.session['done'] == 0:
+            request.session['done'] = 1
+        else:
+            request.session['alert'] = 0
+            request.session['message'] = ""
+    except:
+        print("no alert")
 
 def makeAlert(request, alert, message):
     request.session['done'] = 0

@@ -10,11 +10,7 @@ from django.db.models import Q
 from Util import *
 
 def donorLoginPage(request):
-    if request.session['done'] == 0:
-        request.session['done'] = 1
-    else:
-        request.session['alert'] = 0
-        request.session['message'] = ""
+    clearAlert(request);
     return render(request, "donorLoginApp/donorLogin.html")
 
 def donorLoginSubmit(request):
@@ -43,11 +39,7 @@ def donorLoginSubmit(request):
             return redirect('donorLoginPage')
 
 def donorSignupPage(request):
-    if request.session['done'] == 0:
-        request.session['done'] = 1
-    else:
-        request.session['alert'] = 0
-        request.session['message'] = ""
+    clearAlert(request)
     churches = getAllChurches()
     return render(request, "donorLoginApp/donorSignup.html", {'Churches': churches})
 

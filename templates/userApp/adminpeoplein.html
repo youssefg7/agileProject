@@ -44,7 +44,13 @@
     </thead>
     <tbody>
         {% if sz == 0 %}
-            <td colspan="5" style='text-align: center'>No people in need to be shown</td>
+            <td colspan="6" style='text-align: center'>No people in need to be shown</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+
         {% else %}
             {% for i, need in needs%}
             {% if today > need.due_date %}
