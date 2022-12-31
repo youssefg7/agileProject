@@ -27,6 +27,7 @@ class Church(models.Model):
     church_id = models.AutoField(primary_key = True)
     name = models.CharField(max_length = 254)
     address = models.CharField(max_length = 254)
+    phone_number = models.CharField(max_length=15, default='Not Available')
 
 class ItemDetails(models.Model):
     church_id = models.ForeignKey(Church, on_delete = models.CASCADE, default=-1)

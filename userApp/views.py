@@ -5,7 +5,7 @@ from django.urls import reverse
 from dbApp import models
 from Util import *
 
-# Render the inventory page
+# Render the inventory dashboard
 def adminInvPage(request):
     clearAlert(request)
     try:
@@ -20,7 +20,7 @@ def adminInvPage(request):
         return redirect('userApp:index')
     return render(request, "userApp/admininv.html",dict)
 
-
+# Render people in need dashboadrd
 def adminPeopleINPage(request):
     clearAlert(request)
     try:
@@ -36,6 +36,7 @@ def adminPeopleINPage(request):
         return redirect('userApp:index')
     return render(request, "userApp/adminPeopleIN.html",dict)
 
+# Render reservation dashboard
 def adminReservation(request):
     clearAlert(request)
     try:
@@ -46,23 +47,26 @@ def adminReservation(request):
         l = len(all_reservations)
         reservations = zip(list(range(1, l+1)), all_reservations)
         today = datetime.today().date()
-        print(l)
         dict = {'user':user, 'church': church, 'reservations': reservations, 'today':today, 'sz': l}
     except:
         return redirect('userApp:index')
     return render(request, "userApp/adminreservation.html",dict)
 
+# Render home page
 def index(request):
     clearAlert(request)
     try:
         id = getId(request)
         user = getUser(id)
-        if user.role.role_number == 2:
+        # Get data needed for Donor home page
+        if user.role.role_name == 'Donor':
             churches = getAllChurches()
             cards = getCardsFiltered(id)
             ts = getAllTimeSlots(30)
             dict = {'user':user, 'churches': churches, 'cards': cards, 'timeslots': ts}
-        elif user.role.role_number == 1:
+
+        # Get data needed for Admin home page
+        elif user.role.role_name == 'Admin':
             church = getAdminChurch(id)
             today = datetime.today().date()
             all_items = getItemDetailsFiltered(church)
@@ -258,13 +262,15 @@ def inventorySubmit(request):
     saveItemDetails(church, item, quantity)
     return HttpResponseRedirect('')
 
-def aboutPage(request):
+def knesetyChurches(request):
+    clearAlert(request)
+    all_churches = getAllChurches()
+    l = len(all_churches)
+    churches = zip(range(1, l + 1), all_churches)
     try:
         id = getId(request)
-        user = (id)
-        state = 1
-        dict = {'user':user, 'state': state}
+        user = getUser(id)
+        dict = {'user':user, 'churches':churches, 'sz': l}
     except:
-        state = 2
-        dict = {'role' : "", 'name': "", 'state': state, 'rolenum': -1}
-    return render(request, "userApp/about.html", dict)
+        dict = {'churches':churches, 'sz': l}
+    return render(request, "userApp/kenestychurches.html", dict)

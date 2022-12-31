@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block navbar %} 
+
+{% include 'navbar.html' with prole=user.role.role_name %}
+
+{% endblock navbar %}
+
+
+{% block content %}
+
+{% if request.session.alert == 1 %}
+<br>
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{request.session.message}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+</div>
+
+{% elif request.session.alert == 2 %}
+<br>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{request.session.message}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+</div>
+{% endif %}
+
+<br>
+<table id="example" class="table table-hover" style="width:100%">
+    <thead>
+        <tr>
+            <th scope="col" style="width: 15%">#</th>
+            <th scope="col" style="width: 35%">Church Name</th>
+            <th scope="col" style="width: 25%">Address</th>
+            <th scope="col" style="width: 25%">Phone Number</th>
+        </tr>
+      </thead>
+    <tbody>
+        {% if sz == 0 %}
+        <tr>
+            <td colspan="4" style='text-align: center'>No churches to be shown</td>
+            <td hidden></td>
+            <td hidden></td>
+            <td hidden></td>
+        </tr>
+        {% else %}
+            {% for i, church in churches %}
+
+                <tr>
+                <th scope="row">{{i}}</th>
+                <td>{{church.name}}</td>
+                <td>{{church.address}}</td>
+                <td>{{church.phone_number}}</td>
+                    
+            </tr>
+            {%endfor%}
+            {% endif %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <th scope="col" style="width: 15%">#</th>
+            <th scope="col" style="width: 35%">Church Name</th>
+            <th scope="col" style="width: 25%">Address</th>
+            <th scope="col" style="width: 25%">Phone Number</th>
+          </tr>
+    </tfoot>
+</table>
+
+{% endblock content %}
