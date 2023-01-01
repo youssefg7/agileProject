@@ -4,8 +4,6 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from dbApp import models
 from Util import *
-import reportlab 
-from reportlab.pdfgen import canvas
 
 # Render the inventory dashboard
 def adminInvPage(request):
