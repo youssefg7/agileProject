@@ -140,7 +140,7 @@
                     <div class="row mb-3">
                         <label for="colFormLabel" class="col-form-label">Person in Need:</label>
                         <div class="col-sm-10">
-                            <input type="text" class='form-control' placeholder="Search.." id="search_people" onkeyup="filterFunction()">
+                            <input type="text" class='form-control' placeholder="Search.." id="search_people" onkeyup="filterFunction1()">
                             <select name="people_dropdown" class="form-control" id='people_dropdown' onchange='showitemspeople(this)'>
                                 <option value="0" selected="selected">Please select a Person</option>
                                 {% for person in people %}
@@ -171,7 +171,7 @@
                                 }
                             }
                                                         
-                            function filterFunction() {
+                            function filterFunction1() {
                               var input, filter, ul, li, a, i;
                               input = document.getElementById("search_people");
                               filter = input.value.toUpperCase();

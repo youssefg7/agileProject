@@ -132,7 +132,19 @@
             <td colspan="5" style='text-align: center'>No reservations to be shown</td>
         {% else %}
             {% for i, reservation in reservations %}
-        <tr>
+            {% if today > reservation.date %}
+
+            <tr class="p-3 mb-2 bg-danger text-white">
+
+            {% elif today == reservation.date %}
+
+            <tr class="p-3 mb-2 bg-warning text-dark">
+
+            {% else %}
+
+            <tr>
+
+            {% endif %}
             <th scope="row">{{i}}</th>
             <td>{{reservation.user_id.user_id.name}}</td>
             <td>{{reservation.date}}</td>

@@ -1,9 +1,11 @@
 from datetime import datetime
-from django.http import HttpResponseRedirect
+from django.http import FileResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from dbApp import models
 from Util import *
+import reportlab 
+from reportlab.pdfgen import canvas
 
 # Render the inventory dashboard
 def adminInvPage(request):
@@ -23,6 +25,7 @@ def adminInvPage(request):
 
 # Render people in need dashboadrd
 def adminPeopleINPage(request):
+    request.session['print'] = 1
     clearAlert(request)
     try:
         # Get stored data needed for people in need dashborad
@@ -58,6 +61,31 @@ def adminReservation(request):
 # Render home page
 def index(request):
     clearAlert(request)
+    try:
+        if request.session['print'] == 1:
+            request.session['print'] = 0
+            response = HttpResponse(content_type='application/pdf') 
+
+        # This line force a download
+            response['Content-Disposition'] = 'attachment; filename="1.pdf"' 
+
+
+            # Generate unique timestamp
+            ts = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')
+
+            p = canvas.Canvas(response)
+
+            # Write content on the PDF 
+            p.drawString(100, 600, "Hello " + " Antooz - " + ts ) 
+
+            # Close the PDF object. 
+            p.showPage() 
+            p.save() 
+
+            # Show the result to the user    
+            return response
+    except:
+        pass
     try:
         id = getId(request)
         user = getUser(id)
