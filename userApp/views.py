@@ -1,9 +1,11 @@
 from datetime import datetime
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from dbApp import models
 from Util import *
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
 
 # Render the inventory dashboard
 def adminInvPage(request):
@@ -136,7 +138,8 @@ def onlineDonation(request):
     # Store data in database
     saveReciept(donor, church, item, amount)
     saveItemDetails(church, item, amount)
-    makeAlert(request, 2, "Donation Done")
+    makeAlert(request, 2, "Thank you for your generous donation, Receipt started downloading")
+    generateReceipt(donor, amount, church)
     return redirect('userApp:index')
 
 # Reserve in-person meeting for donation
@@ -167,7 +170,6 @@ def inPersonDonation(request):
     # Reservation completed
     makeAlert(request, 2, "Reservation Done")  
     return redirect('userApp:index')
-
 
 def myAccount(request):
     clearAlert(request)
@@ -294,3 +296,16 @@ def knesetyChurches(request):
     except:
         dict = {'churches':churches, 'sz': l}
     return render(request, "userApp/kenestychurches.html", dict)
+
+def generateReceipt(donor, amount, church):
+    response = HttpResponse(content_type='application/pdf')  
+    response['Content-Disposition'] = 'attachment; filename="file.pdf"'  
+    p = canvas.Canvas(response)  
+    p.setFont("Times-Roman", 55)  
+    p.drawString(100,700, "Hello, Javatpoint.")  
+    p.showPage()  
+    p.save()  
+    return response
+
+
+    
