@@ -34,34 +34,19 @@
       margin-top: auto;
       margin-bottom: auto;
     " class="position-relative">
-        <h3>Your Account:</h3>
+        <h3>Your Account Details:</h3>
         <form action="{% url 'userApp:myAccountSubmit' %}" method="post">
             {% csrf_token %}
             <div class="row mb-3">
-                {% if user.role.role_name == 'Admin' %}
-                <label for="colFormLabel" class="col-form-label">Church:</label>
-                <div class="col-sm-10">
-                    <input type="Email" name="Email" class="form-control" id="colFormLabel" value='{{church.name}}' readonly/>
-                 </div>
-                 <label for="colFormLabel" class="col-form-label">Change Church:</label>
-                 <div class="col-sm-10">
-                    <select name="church_dropdown" class="form-control" id="fav_church">
-                        <option value="0" selected="selected">Please select a church</option>
-                        {% for x in churches %}
-                        <option value="{{x.church_id}}">{{x.name}}</option>
-                        {% endfor%}
-                    </select>
-                </div>
-                {% endif %}
-                <label for="colFormLabel" class="col-form-label">Email:</label>
+                <label for="colFormLabel" class="col-form-label">Your Email:</label>
                 <div class="col-sm-10">
                     <input type="Email" name="Email" class="form-control" id="colFormLabel" value='{{user.email}}' readonly/>
                 </div>
-                <label for="colFormLabel" class="col-form-label">Name:</label>
+                <label for="colFormLabel" class="col-form-label">Your Name:</label>
                 <div class="col-sm-10">
                     <input type="Text" name="Name" class="form-control" id="colFormLabel" placeholder='{{user.name}}'/>
                 </div>
-                <label for="colFormLabel" class="col-form-label">Password:</label>
+                <label for="colFormLabel" class="col-form-label">Change Your Password:</label>
                 <div class="col-sm-10">
                     <input name="Password" type="Password" class="form-control" id="colFormLabel" />
                 </div>

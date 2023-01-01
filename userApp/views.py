@@ -194,12 +194,6 @@ def myAccountSubmit(request):
     if password != '':
         user.password = password
     user.save()
-    if user.role.role_number == 1:
-        admin = getAdmin(user)
-        church = request.POST.get('church_dropdown')
-        if church != '0':
-            admin.church_id = getChurch(church)
-        admin.save()
     return HttpResponseRedirect('/')
 
 def addAdminSubmit(request):

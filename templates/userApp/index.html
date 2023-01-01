@@ -34,6 +34,8 @@
 <h2 class="text-center">Hello {{user.name}}!</h2>
 <br>
 
+<div style="background-color:#212529"> <p style="color:white">Thank you for helping delivering the donations to those who need it. Your role is critical in spreading the good, so keep it up!</p></div>
+
 <p>People in need most due: </p>
 
 <table class="table table-hover">
@@ -116,7 +118,7 @@
 <br>
 <br>
 
-<p>Today Reservations:</p>
+<p>In-person Donation Timeslots Reservations:</p>
 
 <table class="table table-hover">
     <thead>
@@ -132,6 +134,16 @@
             <td colspan="5" style='text-align: center'>No reservations to be shown</td>
         {% else %}
             {% for i, reservation in reservations %}
+                {% if today > reservation.date %}
+                <tr class="p-3 mb-2 bg-danger text-white">
+                {% elif today == reservation.date %}
+                <tr class="p-3 mb-2 bg-warning text-dark">
+
+                {% else %}
+
+                <tr>
+
+                {% endif %}
         <tr>
             <th scope="row">{{i}}</th>
             <td>{{reservation.user_id.user_id.name}}</td>
@@ -158,6 +170,7 @@
 <br>
 <h2 class="text-center">Hello {{user.name}}!</h2>
 <br>
+<div style="background-color:#212529"> <p style="color:white">Welcome to Kenesty, your gateway that helps connecting generous people, like you, to those who deserve in every church. You can donate online now or reserve an in-person meeting with one of the church's representatives that would happily assist you in the church. Thank you for being a helping hand! </p></div>
 
 
     <!-- Nav tabs -->
@@ -293,7 +306,8 @@
 {%else%} {% comment %} Anon {% endcomment %}
 
 <br>
-<h2 class="text-center">Hello Anon!</h2>
+<h2 class="text-center">Hello There!</h2>
+<div> <p>Welcome to Kenesty, your gateway that helps connecting generous people, to those who deserve in every church. You can donate online or reserve an in-person meeting but first you need to create your Kenesty account to be able to donate. You can also check the available churches on our platform by checking the "Kenesty Churches" page from the button above! </p></div>
 <br>
 
 {% endif %}
