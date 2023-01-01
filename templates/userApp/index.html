@@ -17,12 +17,12 @@
     format: 'a6',
     putOnlyUsedFonts:true
     });
-pdf.text("Receipt ID: {{ request.session.receipt_id }}", 20, 30);
-pdf.text("Chruch: {{ request.session.church }}", 20, 40);
-pdf.text("Item Name: {{ request.session.item }}", 20, 50);
-pdf.text("Donor Name: {{ request.session.donor }}", 20, 60);
-pdf.text("Quantity: {{ request.session.quantity }}", 20, 70);
-
+pdf.text("Donation Date & Time: {{request.session.receipt_date}} - {{request.session.receipt_time}}", 20, 30)
+pdf.text("Receipt ID: {{ request.session.receipt_id }}", 20, 40);
+pdf.text("Donor Name: {{ request.session.donor }}", 20, 50);
+pdf.text("Donation To Chruch: {{ request.session.church }}", 20, 60);
+pdf.text("Item Name: {{ request.session.item }}", 20, 70);
+pdf.text("Quantity: {{ request.session.quantity }}", 20, 80);
 pdf.save('Receipt {{ request.session.receipt_id }}.pdf');
 </script>
 

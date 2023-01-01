@@ -299,7 +299,3 @@ def knesetyChurches(request):
     except:
         dict = {'churches':churches, 'sz': l}
     return render(request, "userApp/kenestychurches.html", dict)
-
-
-
-    
