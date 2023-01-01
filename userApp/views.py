@@ -151,6 +151,10 @@ def inPersonDonation(request):
     selected_church = int(request.POST.get('church_dropdown2'))
     selected_timeslot = request.POST.get('timeslot_dropdown')
     meeting_date = request.POST['meeting_date']
+    # Error not selecting a church
+    if selected_church == 0:
+        makeAlert(request, 1, "Please Select a Church")
+        return redirect('userApp:index')
     # No timeslot seleceted
     if selected_timeslot == '0':
         makeAlert(request, 1, 'Please select a timeslot')

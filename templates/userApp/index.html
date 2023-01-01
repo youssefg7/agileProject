@@ -296,7 +296,7 @@ pdf.save('Receipt {{ request.session.receipt_id }}.pdf');
                     <label for="colFormLabel" class="col-form-label">Church:</label>
                     <div class="col-sm-10">
                         <select name="church_dropdown2" class="form-control" id="fav_church">
-                            <option value="" selected="selected">Please select a church</option>
+                            <option value="0" selected="selected">Please select a church</option>
                             {% for x in churches %}
                             <option value="{{x.church_id}}" name='item_dropdown_church'>{{x.name}}</option>
                             {% endfor%}
