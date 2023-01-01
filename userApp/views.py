@@ -164,7 +164,8 @@ def onlineDonation(request):
     # Store data in database
     saveReciept(donor, church, item, amount)
     saveItemDetails(church, item, amount)
-    makeAlert(request, 2, "Donation Done")
+    makeAlert(request, 2, "Thank you for your generous donation, Receipt started downloading")
+    generateReceipt(donor, amount, church)
     return redirect('userApp:index')
 
 # Reserve in-person meeting for donation
@@ -196,7 +197,6 @@ def inPersonDonation(request):
     makeAlert(request, 2, "Reservation Done")  
     return redirect('userApp:index')
 
-
 def myAccount(request):
     clearAlert(request)
     id = getId(request)
@@ -222,12 +222,6 @@ def myAccountSubmit(request):
     if password != '':
         user.password = password
     user.save()
-    if user.role.role_number == 1:
-        admin = getAdmin(user)
-        church = request.POST.get('church_dropdown')
-        if church != '0':
-            admin.church_id = getChurch(church)
-        admin.save()
     return HttpResponseRedirect('/')
 
 def addAdminSubmit(request):
@@ -328,3 +322,16 @@ def knesetyChurches(request):
     except:
         dict = {'churches':churches, 'sz': l}
     return render(request, "userApp/kenestychurches.html", dict)
+
+def generateReceipt(donor, amount, church):
+    response = HttpResponse(content_type='application/pdf')  
+    response['Content-Disposition'] = 'attachment; filename="file.pdf"'  
+    p = canvas.Canvas(response)  
+    p.setFont("Times-Roman", 55)  
+    p.drawString(100,700, "Hello, Javatpoint.")  
+    p.showPage()  
+    p.save()  
+    return response
+
+
+    

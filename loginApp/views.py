@@ -56,6 +56,7 @@ def donorSignupSubmit(request):
     return redirect('donorLoginPage')
 
 def donorLogout(request):
+    makeAlert(request, 2, "Logout successfully")
     response = HttpResponseRedirect('/')
     max_age = 365 * 24 * 60 * 60
     expires = datetime.strftime(datetime.utcnow() + timedelta(seconds=max_age),"%a, %d-%b-%Y %H:%M:%S GMT",)

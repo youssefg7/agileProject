@@ -65,22 +65,12 @@
                 <th scope="row">{{i}}</th>
                 <td>{{reservation.user_id.user_id.name}}</td>
                 <td>{{reservation.date}}</td>
-                <td>{{reservation.time}}</td>
-                {% comment %} <td><input type="submit" class="btn btn-block btn-info" value={{need.id}} />Give out</td> {% endcomment %} 
-                    
+                <td>{{reservation.time}}</td>                    
                     
             </tr>
             {%endfor%}
             {% endif %}
     </tbody>
-    <tfoot>
-        <tr>
-            <th scope="col" style="width: 15%">#</th>
-            <th scope="col" style="width: 35%">Donor Name</th>
-            <th scope="col" style="width: 25%">Date</th>
-            <th scope="col" style="width: 25%">Time</th>
-          </tr>
-    </tfoot>
 </table>
 
 {% endif %}
