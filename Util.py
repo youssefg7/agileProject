@@ -5,7 +5,7 @@ from django.urls import reverse
 from dbApp import models
 from django.db.models import Q
 
-def datetime_range(start, end, delta):
+def dateTimeRange(start, end, delta):
         current = start
         while current < end:
             yield current
@@ -52,7 +52,7 @@ def getPeopleInNeed(id):
 
 def getAllTimeSlots(minute_difference):
     return [dt.strftime('%H:%M') for dt in 
-                datetime_range(datetime(2016, 9, 1, 10), datetime(2016, 9, 1, 8+12, 30), 
+                dateTimeRange(datetime(2016, 9, 1, 10), datetime(2016, 9, 1, 8+12, 30), 
                 timedelta(minutes=minute_difference))]
 
 def needDueDateAlter(need):
