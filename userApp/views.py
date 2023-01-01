@@ -25,7 +25,6 @@ def adminInvPage(request):
 
 # Render people in need dashboadrd
 def adminPeopleINPage(request):
-    request.session['print'] = 1
     clearAlert(request)
     try:
         # Get stored data needed for people in need dashborad
@@ -61,31 +60,6 @@ def adminReservation(request):
 # Render home page
 def index(request):
     clearAlert(request)
-    try:
-        if request.session['print'] == 1:
-            request.session['print'] = 0
-            response = HttpResponse(content_type='application/pdf') 
-
-        # This line force a download
-            response['Content-Disposition'] = 'attachment; filename="1.pdf"' 
-
-
-            # Generate unique timestamp
-            ts = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')
-
-            p = canvas.Canvas(response)
-
-            # Write content on the PDF 
-            p.drawString(100, 600, "Hello " + " Antooz - " + ts ) 
-
-            # Close the PDF object. 
-            p.showPage() 
-            p.save() 
-
-            # Show the result to the user    
-            return response
-    except:
-        pass
     try:
         id = getId(request)
         user = getUser(id)
@@ -137,9 +111,9 @@ def onlineDonation(request):
         makeAlert(request, 1, "Please Select a Church")
         return redirect('userApp:index')
     # Use new card
+    church = getChurch(church)
     if selected_card == '0':
         # Get data from view
-        church = getChurch(church)
         cardNumber = request.POST['Cardnum']
         holderName = request.POST['Cardholdname']
         CVV = int(request.POST['CVV'])
@@ -162,10 +136,10 @@ def onlineDonation(request):
     item = getItemByName('Cash')
     donor = getDonor(id)
     # Store data in database
-    saveReciept(donor, church, item, amount)
+    r_details =  saveReciept(donor, church, item, amount)
     saveItemDetails(church, item, amount)
     makeAlert(request, 2, "Thank you for your generous donation, Receipt started downloading")
-    generateReceipt(donor, amount, church)
+    generateReceipt(request, r_details)
     return redirect('userApp:index')
 
 # Reserve in-person meeting for donation
@@ -283,6 +257,7 @@ def inventorySubmit(request):
     item = request.POST['item_datalist2']
     quantity = request.POST['Quantity2']
     church = getAdminChurch(id)
+    print(donor)
     if donor == '-1':
         name = request.POST['donor_name']
         email = request.POST['donor_email']
@@ -297,7 +272,8 @@ def inventorySubmit(request):
         makeAlert(request, 1, 'Please Choose a Donor or Add New One')
         return redirect('userApp:myAccount')
     else:
-        donor = getDonor(donor)
+        donor = getDonor(getUser(int(donor)))
+    print(donor)
     if item == '':
         makeAlert(request, 1, 'Specify an Item')
         return redirect('userApp:myAccount')
@@ -306,9 +282,10 @@ def inventorySubmit(request):
         return redirect('userApp:myAccount')
     quantity = toInt(quantity)
     item = getItemByName(item)
-    saveReciept(donor, church, item, quantity)
+    r_details = saveReciept(donor, church, item, quantity)
     saveItemDetails(church, item, quantity)
-    return HttpResponseRedirect('')
+    generateReceipt(request, r_details)
+    return redirect('userApp:index')
 
 def knesetyChurches(request):
     clearAlert(request)
@@ -323,15 +300,6 @@ def knesetyChurches(request):
         dict = {'churches':churches, 'sz': l}
     return render(request, "userApp/kenestychurches.html", dict)
 
-def generateReceipt(donor, amount, church):
-    response = HttpResponse(content_type='application/pdf')  
-    response['Content-Disposition'] = 'attachment; filename="file.pdf"'  
-    p = canvas.Canvas(response)  
-    p.setFont("Times-Roman", 55)  
-    p.drawString(100,700, "Hello, Javatpoint.")  
-    p.showPage()  
-    p.save()  
-    return response
 
 
     

@@ -116,6 +116,7 @@ def saveReciept(donor, church, item, quantity):
                 reciept_id = reciept, item_id = item, 
                 item_quantity = quantity)
     r_details.save()
+    return r_details
 
 
 def saveItemDetails(church, item, quantity):
@@ -207,6 +208,12 @@ def clearAlert(request):
         else:
             request.session['alert'] = 0
             request.session['message'] = ""
+        if request.session['pdf'] == 2:
+            request.session['pdf'] = 1
+        if request.session['pdf'] == 1:
+            request.session['pdf'] = 0
+        else:
+            request.session['print'] = 0
     except:
         print("no alert")
 
@@ -214,3 +221,12 @@ def makeAlert(request, alert, message):
     request.session['done'] = 0
     request.session['alert'] = alert
     request.session['message'] = message
+
+def generateReceipt(request, r_details):
+    request.session['pdf'] = 1
+    request.session['print'] = 1
+    request.session['quantity'] = r_details.item_quantity
+    request.session['donor'] = r_details.reciept_id.user_id.user_id.name
+    request.session['item'] = r_details.item_id.name
+    request.session['church'] = r_details.reciept_id.church_id.name
+    request.session['receipt_id'] = r_details.reciept_id.reciept_id

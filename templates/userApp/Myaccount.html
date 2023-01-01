@@ -194,7 +194,7 @@
                             <input type="date" name="due_date" class="form-control" id="colFormLabel" placeholder="YYYY-MM-DD" />
                         </div>
                     </div>
-                        <input type="submit" class="btn btn-primary" value="Add Admin"/>
+                        <input type="submit" class="btn btn-primary" value="Add Person in Need"/>
                     </div>
             </div>
             </div>
@@ -230,7 +230,7 @@
                             <select name="donor_dropdown" class="form-control" id='donor_dropdown' onchange='showitemsinventory(this)'>
                                 <option value="0" selected="selected">Please select a Donor</option>
                                 {% for donor in donors %}
-                                <option value="{{donor.user_id}}">{{donor.user_id.name}} ({{donor.user_id.email}})</option>
+                                <option value="{{donor.user_id.user_id}}">{{donor.user_id.name}} ({{donor.user_id.email}})</option>
                                 {% endfor%}
                                 <option style="font-size: 1pt; background-color: #555555;" disabled value='-1'>&nbsp;</option>
                                 <option value="-1">Other</option>
@@ -288,7 +288,7 @@
                         </div>
                         
                     </div>
-                        <input type="submit" class="btn btn-primary" value="Add Admin"/>
+                        <input type="submit" class="btn btn-primary" value="Add to Inventory"/>
                     </div>
             </div>
             </div>
