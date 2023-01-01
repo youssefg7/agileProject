@@ -17,8 +17,10 @@ def adminInvPage(request):
         church = getAdminChurch(id)
         all_items = getItemDetailsFiltered(church)
         l = len(all_items)
-        items = zip(list(range(1, l+1)), all_items)
-        dict = {'user':user, 'church': church, 'items': items, 'sz': l}
+        itemsdetails = zip(list(range(1, l+1)), all_items)
+        donors = getAllDonors()
+        items = getAllItems()
+        dict = {'user':user, 'church': church, 'itemsdetails': itemsdetails, 'sz': l, 'items':items, 'donors':donors}
     except:
         return redirect('userApp:index')
     return render(request, "userApp/admininv.html",dict)
@@ -32,10 +34,12 @@ def adminPeopleINPage(request):
         user = getUser(id)
         church = getAdminChurch(id)
         all_needs = getNeedsFiltered(church)
+        items = getAllItems()
+        people = getAllPeopleInNeed()
         l = len(all_needs)
         needs = zip(list(range(1, l+1)), all_needs)
         today = datetime.today().date()
-        dict = {'user':user, 'church': church, 'needs': needs, 'today':today, 'sz': l}
+        dict = {'user':user, 'church': church, 'needs': needs, 'today':today, 'sz': l, 'items':items, 'people':people}
     except:
         return redirect('userApp:index')
     return render(request, "userApp/adminPeopleIN.html",dict)

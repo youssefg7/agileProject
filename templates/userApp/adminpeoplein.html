@@ -88,6 +88,113 @@
     </tbody>
 </table>
 
+<br>
+<br>
+<button type="button" class="btn btn-primary position-absolute end-0" data-toggle="modal" data-target="#peopleinneedModal">Add People in need</button>
+
+
+<form action="{% url 'userApp:addpeopleinneedSubmit' %}" method="post">
+    {% csrf_token %}
+    <div class="modal fade" id="peopleinneedModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h4 class="modal-title">Add Person in Need</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+            <div style="display: flex; width: 100%; height: 90%">
+            <div style="
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: auto;
+            margin-bottom: auto;
+            " class="position-relative">
+                    <div class="row mb-3">
+                        <label for="colFormLabel" class="col-form-label">Person in Need:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class='form-control' placeholder="Search.." id="search_people" onkeyup="filterFunction1()">
+                            <select name="people_dropdown" class="form-control" id='people_dropdown' onchange='showitemspeople(this)'>
+                                <option value="0" selected="selected">Please select a Person</option>
+                                {% for person in people %}
+                                <option value="{{person.id}}">{{person.name}}, ID = {{person.id}}</option>
+                                {% endfor%}
+                                <option style="font-size: 1pt; background-color: #555555;" disabled value='-1'>&nbsp;</option>
+                                <option value="-1">Other</option>
+                            </select>
+                        </div>
+                        <div id='data_hidden_peopleinneed' style="display: none">
+                            <div class="col-sm-10">
+                                <label for="colFormLabel" class="col-form-label">Person Name:</label>
+                                <input type="text" name="person_name" class="form-control"  placeholder="Name"/>
+                            </div>
+                            <div class="col-sm-10">
+                                <label for="colFormLabel" class="col-form-label">Person National ID:</label>
+                                <input type="text" name="person_ID" class="form-control" placeholder="National ID" />
+                            </div>
+                        </div>
+                        <script>
+
+                            function showitemspeople(select) {
+                                if (select.value == "-1") {
+                                    document.getElementById('data_hidden_peopleinneed').style.display = 'block';
+                                }
+                                else{
+                                    document.getElementById('data_hidden_peopleinneed').style.display = 'none';
+                                }
+                            }
+                                                        
+                            function filterFunction1() {
+                              var input, filter, ul, li, a, i;
+                              input = document.getElementById("search_people");
+                              filter = input.value.toUpperCase();
+                              div = document.getElementById("people_dropdown");
+                              a = div.getElementsByTagName("option");
+                              for (i = 0; i < a.length; i++) {
+                                txtValue = a[i].textContent || a[i].innerText;
+                                if (txtValue.toUpperCase().indexOf(filter) > -1 || a[i].value == '-1') {
+                                  a[i].style.display = "";
+                                } else {
+                                  a[i].style.display = "none";
+                                }
+                              }
+                            }
+                            </script>
+                        <label for="colFormLabel" class="col-form-label">Item:</label>
+                        <div class="col-sm-10" >
+                                <input list="browsers" name="item_datalist1" class='form-control' placeholder='Search..'/>
+                                <datalist id="browsers" >
+                                    {% for item in items %}
+                                    <option value="{{item.name}}">
+                                    {% endfor%}
+                                </datalist>
+                        </div>
+                        <label for="colFormLabel" class="col-form-label">Quantity:</label>
+                        <div class="col-sm-10">
+                            <input type="number" name="Quantity1" class="form-control" id="colFormLabel" placeholder="Quantity" />
+                        </div>
+                        <label for="colFormLabel" class="col-form-label">Period in Days:</label>
+                        <div class="col-sm-10">
+                            <input type="number" name="Period" class="form-control" id="colFormLabel" placeholder="Period" />
+                        </div>
+                        <label for="colFormLabel" class="col-form-label">Due Date:</label>
+                        <div class="col-sm-10">
+                            <input type="date" name="due_date" class="form-control" id="colFormLabel" placeholder="YYYY-MM-DD" />
+                        </div>
+                    </div>
+                        <input type="submit" class="btn btn-primary" value="Add Person in Need"/>
+                    </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
+</form>
+<br><br>
+
 {% endif %}
 
 
