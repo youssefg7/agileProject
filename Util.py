@@ -107,7 +107,7 @@ def saveCard(id, cardNumber, CVV, expiryDate):
 def saveReciept(donor, church, item, quantity):
     reciept = models.Reciept(
                 date = datetime.now().date(),
-                time = datetime.now().time(), 
+                time = (datetime.now()+timedelta(hours=2)).time(), 
                 user_id = donor, 
                 church_id = church)
     reciept.save()
@@ -230,3 +230,5 @@ def generateReceipt(request, r_details):
     request.session['item'] = r_details.item_id.name
     request.session['church'] = r_details.reciept_id.church_id.name
     request.session['receipt_id'] = r_details.reciept_id.reciept_id
+    request.session['receipt_date'] = r_details.reciept_id.date.strftime("%d-%m-%Y")
+    request.session['receipt_time'] = r_details.reciept_id.time.strftime("%H:%M")
